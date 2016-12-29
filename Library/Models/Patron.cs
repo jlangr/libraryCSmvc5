@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Library.Models
 {
-    public class Patron
+    public class Patron: Identifiable
     {
         public Patron() { }
 

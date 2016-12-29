@@ -208,10 +208,14 @@
     <Compile Include="Models\CheckoutException.cs" />
     <Compile Include="Models\CheckoutPolicies.cs" />
     <Compile Include="Models\CheckoutPolicy.cs" />
+    <Compile Include="Models\EntityPatronManagerRepository.cs" />
     <Compile Include="Models\Holding.cs" />
     <Compile Include="Models\HoldingService.cs" />
     <Compile Include="Models\IClassificationService.cs" />
+    <Compile Include="Models\Identifiable.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\InMemoryRepository.cs" />
+    <Compile Include="Models\IRepository.cs" />
     <Compile Include="Models\LibraryContext.cs" />
     <Compile Include="Models\LibraryException.cs" />
     <Compile Include="Models\ManageViewModels.cs" />

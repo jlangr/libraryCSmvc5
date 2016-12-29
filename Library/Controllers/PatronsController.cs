@@ -12,26 +12,22 @@ namespace Library.Controllers
 {
     public class PatronsController : Controller
     {
-        private LibraryContext db = new LibraryContext();
+        IRepository<Patron> repository = new EntityRepository<Patron>(db => db.Patrons);
 
         // GET: Patrons
         public ActionResult Index()
         {
-            return View(db.Patrons.ToList());
+            return View(repository.GetAll());
         }
 
         // GET: Patrons/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Patron patron = db.Patrons.Find(id);
+            var patron = repository.GetByID(id.Value);
             if (patron == null)
-            {
                 return HttpNotFound();
-            }
             return View(patron);
         }
 
@@ -50,11 +46,9 @@ namespace Library.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Patrons.Add(patron);
-                db.SaveChanges();
+                repository.Create(patron);
                 return RedirectToAction("Index");
             }
-
             return View(patron);
         }
 
@@ -62,14 +56,10 @@ namespace Library.Controllers
         public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Patron patron = db.Patrons.Find(id);
+            var patron = repository.GetByID(id.Value);
             if (patron == null)
-            {
                 return HttpNotFound();
-            }
             return View(patron);
         }
 
@@ -82,8 +72,7 @@ namespace Library.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(patron).State = EntityState.Modified;
-                db.SaveChanges();
+                repository.MarkModified(patron);
                 return RedirectToAction("Index");
             }
             return View(patron);
@@ -93,14 +82,10 @@ namespace Library.Controllers
         public ActionResult Delete(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Patron patron = db.Patrons.Find(id);
+            var patron = repository.GetByID(id.Value);
             if (patron == null)
-            {
                 return HttpNotFound();
-            }
             return View(patron);
         }
 
@@ -109,18 +94,14 @@ namespace Library.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Patron patron = db.Patrons.Find(id);
-            db.Patrons.Remove(patron);
-            db.SaveChanges();
+            repository.Delete(id);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
-                db.Dispose();
-            }
+                repository.Dispose();
             base.Dispose(disposing);
         }
     }
