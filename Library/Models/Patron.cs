@@ -4,6 +4,8 @@ namespace Library.Models
 {
     public class Patron
     {
+        public Patron() { }
+
         public Patron(int id, string name)
         {
             Holdings = new List<string>();
@@ -11,9 +13,9 @@ namespace Library.Models
             Id = id;
         }
 
-        public string Name { get; private set; }
-        public int Id { get; private set; }
-        public decimal Balance { get; private set; }
+        public string Name { get; set; }
+        public int Id { get; set; }
+        public decimal Balance { get; set; }
 
         public void Fine(decimal amount)
         {
