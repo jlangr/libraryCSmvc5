@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace Library.Models
 {
+    [Serializable]
     public class Patron: Identifiable
     {
         public Patron() { }

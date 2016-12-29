@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Library.Models
 {
-    interface IRepository<T>
+    public interface IRepository<T>
         where T: Identifiable
     {
         int Create(T entity);

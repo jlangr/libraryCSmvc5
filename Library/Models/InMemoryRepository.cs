@@ -13,12 +13,12 @@ namespace Library.Models
         where T: Identifiable
     {
         private IDictionary<int, T> entities = new Dictionary<int, T>();
+
         public int Create(T entity)
         {
+            entity.Id = NextId();
             T copy = DeepClone(entity);
-            if (entity.Id == 0)
-                entity.Id = NextId();
-            entities[entity.Id] = entity;
+            entities[entity.Id] = copy;
             return entity.Id;
         }
 
@@ -41,6 +41,10 @@ namespace Library.Models
 
         private int NextId()
         {
+            Console.WriteLine("Entities keys couhnt: " + entities.Keys.Count);
+            if (entities.Keys.Count == 0)
+                return 1;
+            Console.WriteLine("Entities keys Max: " + entities.Keys.Count);
             return entities.Keys.Max() + 1;
         }
 
@@ -60,6 +64,8 @@ namespace Library.Models
 
         public T GetByID(int id)
         {
+            if (!entities.ContainsKey(id))
+                return default(T);
             return entities[id];
         }
 

@@ -14,6 +14,11 @@ namespace Library.Controllers
     {
         IRepository<Patron> repository = new EntityRepository<Patron>(db => db.Patrons);
 
+        public PatronsController(IRepository<Patron> repository)
+        {
+            this.repository = repository;
+        }
+
         // GET: Patrons
         public ActionResult Index()
         {
