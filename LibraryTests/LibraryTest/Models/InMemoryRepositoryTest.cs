@@ -41,7 +41,6 @@ namespace LibraryTests.LibraryTest.Models
             Assert.That(id, Is.EqualTo(2));
         }
 
-
         [Test]
         public void RetrievedInstanceNotSameAsCreated()
         {

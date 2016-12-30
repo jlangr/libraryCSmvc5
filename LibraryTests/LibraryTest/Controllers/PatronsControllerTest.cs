@@ -50,8 +50,8 @@ namespace LibraryTests.LibraryTest.Controllers
 
                 var view = controller.Details(id);
 
-                Console.WriteLine(view.GetType());
-                Assert.True(true);
+                Patron viewPatron = (view as ViewResult).Model as Patron;
+                Assert.That(viewPatron.Name, Is.EqualTo("Jeff"));
             }
         }
     }

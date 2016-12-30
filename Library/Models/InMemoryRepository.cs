@@ -41,10 +41,8 @@ namespace Library.Models
 
         private int NextId()
         {
-            Console.WriteLine("Entities keys couhnt: " + entities.Keys.Count);
             if (entities.Keys.Count == 0)
                 return 1;
-            Console.WriteLine("Entities keys Max: " + entities.Keys.Count);
             return entities.Keys.Max() + 1;
         }
 
