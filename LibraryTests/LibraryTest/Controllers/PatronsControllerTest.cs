@@ -45,13 +45,28 @@ namespace LibraryTests.LibraryTest.Controllers
             [Test]
             public void ReturnsViewOnPatronWhenFound()
             {
-                Patron patron = new Patron() { Name = "Jeff" };
-                int id = repo.Create(patron); 
+                int id = repo.Create(new Patron() { Name = "Jeff" }); 
 
                 var view = controller.Details(id);
 
-                Patron viewPatron = (view as ViewResult).Model as Patron;
+                var viewPatron = (view as ViewResult).Model as Patron;
                 Assert.That(viewPatron.Name, Is.EqualTo("Jeff"));
+            }
+        }
+        
+        public class Index: PatronsControllerTest
+        {
+            [Test]
+            public void RetrievesViewOnAllPatrons()
+            {
+                repo.Create(new Patron { Name = "Alpha" }); 
+                repo.Create(new Patron { Name = "Beta" }); 
+
+                var view = controller.Index();
+
+                var patrons = (view as ViewResult).Model as IEnumerable<Patron>;
+                Assert.That(patrons.Select(p => p.Name), 
+                    Is.EqualTo(new string[] { "Alpha", "Beta" }));
             }
         }
     }
