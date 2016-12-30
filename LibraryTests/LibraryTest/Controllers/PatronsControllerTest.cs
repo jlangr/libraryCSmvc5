@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using Library.Controllers;
 using Library.Models;
 using System.Web.Mvc;
-using System.Net;
 
 namespace LibraryTests.LibraryTest.Controllers
 {
@@ -67,6 +63,38 @@ namespace LibraryTests.LibraryTest.Controllers
                 var patrons = (view as ViewResult).Model as IEnumerable<Patron>;
                 Assert.That(patrons.Select(p => p.Name), 
                     Is.EqualTo(new string[] { "Alpha", "Beta" }));
+            }
+        }
+
+        public class Create: PatronsControllerTest
+        {
+            [Test]
+            public void CreatesPatronWhenModelStateValid()
+            {
+                var patron = new Patron { Name = "Venkat" };
+
+                controller.Create(patron);
+
+                var retrieved = repo.GetAll().First();
+                Assert.That(retrieved.Name, Is.EqualTo("Venkat"));
+            }
+
+            [Test]
+            public void RedirectsToIndexWhenModelValid()
+            {
+                var result = controller.Create(new Patron()) as RedirectToRouteResult;
+
+                Assert.That(result.RouteValues["action"], Is.EqualTo("Index"));
+            }
+
+            [Test]
+            public void AddsNoPatronWhenModelStateInvalid()
+            {
+                controller.ModelState.AddModelError("", "");
+
+                controller.Create(new Patron());
+
+                Assert.False(repo.GetAll().Any());
             }
         }
     }

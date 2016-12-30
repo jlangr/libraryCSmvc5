@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Library.Models
 {
@@ -15,6 +16,7 @@ namespace Library.Models
             Id = id;
         }
 
+        [Required, StringLength(25)]
         public string Name { get; set; }
         public int Id { get; set; }
         public decimal Balance { get; set; }
