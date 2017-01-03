@@ -8,6 +8,10 @@ namespace Library.Controllers
     {
         IRepository<Patron> repository = new EntityRepository<Patron>(db => db.Patrons);
 
+        public PatronsController()
+        {
+        }
+
         public PatronsController(IRepository<Patron> repository)
         {
             this.repository = repository;
@@ -17,17 +21,6 @@ namespace Library.Controllers
         public ActionResult Index()
         {
             return View(repository.GetAll());
-        }
-
-        // GET: Patrons/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var patron = repository.GetByID(id.Value);
-            if (patron == null)
-                return HttpNotFound();
-            return View(patron);
         }
 
         // GET: Patrons/Create
@@ -62,6 +55,18 @@ namespace Library.Controllers
             return View(patron);
         }
 
+        // GET: Patrons/Delete/5
+        public ActionResult Delete(int? id)
+        {
+            return Edit(id);
+        }
+
+        // GET: Patrons/Details/5
+        public ActionResult Details(int? id)
+        {
+            return Edit(id);
+        }
+
         // POST: Patrons/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -74,17 +79,6 @@ namespace Library.Controllers
                 repository.MarkModified(patron);
                 return RedirectToAction("Index");
             }
-            return View(patron);
-        }
-
-        // GET: Patrons/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var patron = repository.GetByID(id.Value);
-            if (patron == null)
-                return HttpNotFound();
             return View(patron);
         }
 
