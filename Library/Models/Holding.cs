@@ -31,9 +31,6 @@ namespace Library.Models
             BranchId = branchId;
         }
 
-        // TODO where?
-        public List<Branch> BranchesViewList { get; set; }
-
         public int Id { get; set; }
         public string Classification { get; set; }
         public int CopyNumber { get; set; }

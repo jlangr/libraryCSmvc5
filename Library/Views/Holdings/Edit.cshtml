@@ -1,4 +1,4 @@
-﻿@model Library.Models.Holding
+﻿@model Library.Models.HoldingViewModel
 
 @{
     ViewBag.Title = "Edit";
@@ -47,7 +47,6 @@
                 @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.BranchesViewList, "Id", "Name"));
             </div>
         </div>
-
 
         <div class="form-group">
             @Html.LabelFor(model => model.HeldByPatronId, htmlAttributes: new { @class = "control-label col-md-2" })

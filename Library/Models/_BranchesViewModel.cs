@@ -5,9 +5,9 @@ using System.Web;
 
 namespace Library.Models
 {
-    public class BranchesViewModel
+    public class _BranchesViewModel
     {
-        public string SelectedBranch { get; set; }
+        public Branch SelectedBranch { get; set; }
         public IEnumerable<Branch> Branches { get; set; }
     }
 }

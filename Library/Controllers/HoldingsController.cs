@@ -13,7 +13,14 @@ namespace Library.Controllers
         // GET: Holdings
         public ActionResult Index()
         {
-            return View(repository.GetAll());
+            var model = new List<HoldingViewModel>();
+            foreach (var holding in repository.GetAll())
+            {
+                //var h = new HoldingViewModel(holding);
+                //h.BranchName = branchRepo.GetByID(h.BranchId).Name;
+                model.Add(new HoldingViewModel(holding) { BranchName = branchRepo.GetByID(holding.BranchId).Name });
+            }
+            return View(model);
         }
 
         // GET: Holdings/Details/5
@@ -25,9 +32,9 @@ namespace Library.Controllers
         // GET: Holdings/Create
         public ActionResult Create()
         {
-            Holding holding = new Holding();
-            holding.BranchesViewList = new List<Branch>(branchRepo.GetAll()); // TODO ??
-            return View(holding);
+            var holdingVM = new HoldingViewModel();
+            holdingVM.BranchesViewList = new List<Branch>(branchRepo.GetAll());
+            return View(holdingVM);
         }
 
         // POST: Holdings/Create
@@ -51,9 +58,10 @@ namespace Library.Controllers
             Holding holding = repository.GetByID(id.Value);
             if (holding == null)
                 return HttpNotFound();
+            var viewModel = new HoldingViewModel(holding);
             var branches = branchRepo.GetAll();
-            holding.BranchesViewList = new List<Branch>(branches); // TODO ??
-            return View(holding);
+            viewModel.BranchesViewList = new List<Branch>(branches);
+            return View(viewModel);
         }
 
         // POST: Holdings/Edit/5

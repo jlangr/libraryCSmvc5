@@ -204,14 +204,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201701042056497_Initial.cs" />
-    <Compile Include="Migrations\201701042056497_Initial.Designer.cs">
-      <DependentUpon>201701042056497_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201701042318001_Initial.cs" />
+    <Compile Include="Migrations\201701042318001_Initial.Designer.cs">
+      <DependentUpon>201701042318001_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BookCheckoutPolicy.cs" />
     <Compile Include="Models\Branch.cs" />
+    <Compile Include="Models\HoldingViewModel.cs" />
+    <Compile Include="Models\_BranchesViewModel.cs" />
     <Compile Include="Models\BranchRepository.cs" />
     <Compile Include="Models\BranchService.cs" />
     <Compile Include="Models\CheckoutException.cs" />
@@ -314,7 +316,7 @@
     <Content Include="Views\Holdings\Details.cshtml" />
     <Content Include="Views\Holdings\Edit.cshtml" />
     <Content Include="Views\Holdings\Index.cshtml" />
-    <Content Include="Views\Branches\BranchList.cshtml" />
+    <Content Include="Views\Shared\_BranchList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -328,8 +330,8 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201701042056497_Initial.resx">
-      <DependentUpon>201701042056497_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201701042318001_Initial.resx">
+      <DependentUpon>201701042318001_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
