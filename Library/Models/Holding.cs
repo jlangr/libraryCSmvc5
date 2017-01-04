@@ -1,11 +1,16 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
 {
-    public class Holding
+    [Serializable]
+    public class Holding: Identifiable
     {
         public const int NoPatron = -1;
         public const int CheckedOutBranchId = -1;
+
+        public Holding() { }
 
         public Holding(string classification, int copyNumber) 
             : this(classification, copyNumber, CheckedOutBranchId)
@@ -22,8 +27,17 @@ namespace Library.Models
             BranchId = branchId;
         }
 
-        public string Classification { get; private set; }
+        public int Id { get; set; }
+        public string Classification { get; set; }
+        public int CopyNumber { get; set; }
+        [NotMapped]
+        public CheckoutPolicy CheckoutPolicy { get; set; }
+        public DateTime CheckOutTimestamp { get; set; }
+        public int BranchId { get; set; }
+        public int HeldByPatronId { get; set; }
+        public DateTime LastCheckedIn { get; set; }
 
+        [NotMapped]
         public string Barcode
         {
             get
@@ -32,8 +46,10 @@ namespace Library.Models
             }
         }
 
-        public DateTime DueDate { get; private set; }
+        [NotMapped]
+        public DateTime DueDate { get; set; }
 
+        [NotMapped]
         public bool IsCheckedOut
         {
             get
@@ -50,8 +66,6 @@ namespace Library.Models
             BranchId = toBranchId;
         }
 
-        public DateTime LastCheckedIn { get; private set; }
-
         public void CheckOut(DateTime timestamp, int patronId, CheckoutPolicy checkoutPolicy)
         {
             CheckOutTimestamp = timestamp;
@@ -65,19 +79,9 @@ namespace Library.Models
             DueDate = CheckOutTimestamp.AddDays(CheckoutPolicy.MaximumCheckoutDays());
         }
 
-        public CheckoutPolicy CheckoutPolicy { get; set; }
-
-        public DateTime CheckOutTimestamp { get; private set; }
-
-        public int CopyNumber { get; private set; }
-
-        public int BranchId { get; set; }
-
-        public int HeldByPatronId { get; private set; }
-
         public static string GenerateBarcode(string classification, int copyNumber)
         {
-            return String.Format("{0}:{1}", classification, copyNumber);
+            return string.Format("{0}:{1}", classification, copyNumber);
         }
 
         public static string ClassificationFromBarcode(string barcode)

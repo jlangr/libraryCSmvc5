@@ -4,80 +4,77 @@ using Library.Models;
 
 namespace Library.Controllers
 {
-    public class BranchesController : Controller
+    public class HoldingsController : Controller
     {
-        IRepository<Branch> repository = new EntityRepository<Branch>(db => db.Branches);
+        IRepository<Holding> repository = new EntityRepository<Holding>(db => db.Holdings);
 
-        public BranchesController()
-        {
-        }
-
-        public BranchesController(IRepository<Branch> repository)
-        {
-            this.repository = repository;
-        }
-
-        // GET: Branches
+        // GET: Holdings
         public ActionResult Index()
         {
             return View(repository.GetAll());
         }
 
-        // GET: Branches/Create
+        // GET: Holdings/Details/5
+        public ActionResult Details(int? id)
+        {
+            return Edit(id);
+        }
+
+        // GET: Holdings/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Branches/Create
+        // POST: Holdings/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name")] Branch branch)
+        public ActionResult Create([Bind(Include = "Id,Classification,CopyNumber,CheckOutTimestamp,BranchId,HeldByPatronId,LastCheckedIn")] Holding holding)
         {
             if (ModelState.IsValid)
             {
-                repository.Create(branch);
+                repository.Create(holding);
                 return RedirectToAction("Index");
             }
 
-            return View(branch);
+            return View(holding);
         }
 
-        // GET: Branches/Edit/5
+        // GET: Holdings/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var branch = repository.GetByID(id.Value);
-            if (branch == null)
+            Holding holding = repository.GetByID(id.Value);
+            if (holding == null)
                 return HttpNotFound();
-            return View(branch);
+            return View(holding);
         }
 
-        // POST: Branches/Edit/5
+        // POST: Holdings/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name")] Branch branch)
+        public ActionResult Edit([Bind(Include = "Id,Classification,CopyNumber,CheckOutTimestamp,BranchId,HeldByPatronId,LastCheckedIn")] Holding holding)
         {
             if (ModelState.IsValid)
             {
-                repository.MarkModified(branch);
+                repository.MarkModified(holding);
                 return RedirectToAction("Index");
             }
-            return View(branch);
+            return View(holding);
         }
 
-        // GET: Branches/Delete/5
+        // GET: Holdings/Delete/5
         public ActionResult Delete(int? id)
         {
             return Edit(id);
         }
 
-        // POST: Branches/Delete/5
+        // POST: Holdings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

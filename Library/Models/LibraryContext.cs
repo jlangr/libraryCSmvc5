@@ -22,5 +22,7 @@ namespace Library.Models
         public System.Data.Entity.DbSet<Library.Models.Patron> Patrons { get; set; }
 
         public System.Data.Entity.DbSet<Library.Models.Branch> Branches { get; set; }
+
+        public System.Data.Entity.DbSet<Library.Models.Holding> Holdings { get; set; }
     }
 }

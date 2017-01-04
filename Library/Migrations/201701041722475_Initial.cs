@@ -17,6 +17,20 @@ namespace Library.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
+                "dbo.Holdings",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Classification = c.String(),
+                        CopyNumber = c.Int(nullable: false),
+                        CheckOutTimestamp = c.DateTime(nullable: false),
+                        BranchId = c.Int(nullable: false),
+                        HeldByPatronId = c.Int(nullable: false),
+                        LastCheckedIn = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
                 "dbo.Patrons",
                 c => new
                     {
@@ -31,6 +45,7 @@ namespace Library.Migrations
         public override void Down()
         {
             DropTable("dbo.Patrons");
+            DropTable("dbo.Holdings");
             DropTable("dbo.Branches");
         }
     }
