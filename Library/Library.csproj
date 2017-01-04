@@ -212,6 +212,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BookCheckoutPolicy.cs" />
     <Compile Include="Models\Branch.cs" />
+    <Compile Include="Models\BranchRepository.cs" />
     <Compile Include="Models\BranchService.cs" />
     <Compile Include="Models\CheckoutException.cs" />
     <Compile Include="Models\CheckoutPolicies.cs" />
@@ -313,6 +314,7 @@
     <Content Include="Views\Holdings\Details.cshtml" />
     <Content Include="Views\Holdings\Edit.cshtml" />
     <Content Include="Views\Holdings\Index.cshtml" />
+    <Content Include="Views\Branches\BranchList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

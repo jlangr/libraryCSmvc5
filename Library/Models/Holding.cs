@@ -10,15 +10,14 @@ namespace Library.Models
     public class Holding: Identifiable
     {
         public const int NoPatron = -1;
-        public const int CheckedOutBranchId = -1;
 
         public Holding()
-            : this("", 0, CheckedOutBranchId)
+            : this("", 1, Branch.CheckedOutId)
         {
         }
 
         public Holding(string classification, int copyNumber) 
-            : this(classification, copyNumber, CheckedOutBranchId)
+            : this(classification, copyNumber, Branch.CheckedOutId)
         {
         }
 

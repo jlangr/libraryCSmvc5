@@ -17,12 +17,12 @@ namespace Library.Models
             this.dbSetFunc = dbSetFunc;
         }
 
-        public T GetByID(int id)
+        virtual public T GetByID(int id)
         {
             return dbSetFunc(db).FirstOrDefault(p => p.Id == id);
         }
 
-        public IEnumerable<T> GetAll()
+        virtual public IEnumerable<T> GetAll()
         {
             return dbSetFunc(db).ToList();
         }

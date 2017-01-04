@@ -8,6 +8,7 @@ namespace Library.Controllers
     public class HoldingsController : Controller
     {
         IRepository<Holding> repository = new EntityRepository<Holding>(db => db.Holdings);
+        IRepository<Branch> branchRepo = new BranchRepository();
 
         // GET: Holdings
         public ActionResult Index()
@@ -24,20 +25,12 @@ namespace Library.Controllers
         // GET: Holdings/Create
         public ActionResult Create()
         {
-            Holding holding = new Models.Holding();
-            List<Branch> branches = new List<Branch>
-            {
-                new Models.Branch() { Id = 1, Name = "Hey" },
-                new Models.Branch() { Id = 2, Name = "Toes" }
-            };
-
-            holding.BranchesViewList = branches;
+            Holding holding = new Holding();
+            holding.BranchesViewList = new List<Branch>(branchRepo.GetAll()); // TODO ??
             return View(holding);
         }
 
         // POST: Holdings/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Classification,CopyNumber,CheckOutTimestamp,BranchId,HeldByPatronId,LastCheckedIn")] Holding holding)
@@ -47,7 +40,6 @@ namespace Library.Controllers
                 repository.Create(holding);
                 return RedirectToAction("Index");
             }
-
             return View(holding);
         }
 
@@ -59,6 +51,8 @@ namespace Library.Controllers
             Holding holding = repository.GetByID(id.Value);
             if (holding == null)
                 return HttpNotFound();
+            var branches = branchRepo.GetAll();
+            holding.BranchesViewList = new List<Branch>(branches); // TODO ??
             return View(holding);
         }
 

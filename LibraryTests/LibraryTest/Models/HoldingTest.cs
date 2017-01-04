@@ -16,7 +16,7 @@ namespace LibraryTest.Models
         {
             var holding = new Holding("QA123", 2);
             Assert.That(holding.Barcode, Is.EqualTo("QA123:2"));
-            Assert.That(holding.BranchId, Is.EqualTo(Holding.CheckedOutBranchId));
+            Assert.That(holding.BranchId, Is.EqualTo(Branch.CheckedOutId));
         }
 
         [Test]
