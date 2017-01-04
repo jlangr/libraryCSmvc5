@@ -47,7 +47,7 @@ namespace Library.Models
                     var cis = TimeService.Now;
                     Material m = null;
                     m = classificationService.Retrieve(h.Classification);
-                    var fine = m.CheckoutPolicy.FineAmount(h.CheckOutTimestamp, cis);
+                    var fine = m.CheckoutPolicy.FineAmount(h.CheckOutTimestamp.Value, cis);
                     var p = patronService.Retrieve(patronId);
                     p.Fine(fine);
                     holdingService.CheckIn(cis, bc, brId);
@@ -60,7 +60,7 @@ namespace Library.Models
                         var bc1 = h.Barcode;
                         var n = TimeService.Now;
                         var t = TimeService.Now.AddDays(21);
-                        var f = classificationService.Retrieve(h.Classification).CheckoutPolicy.FineAmount(h.CheckOutTimestamp, n.AddDays(21));
+                        var f = classificationService.Retrieve(h.Classification).CheckoutPolicy.FineAmount(h.CheckOutTimestamp.Value, n.AddDays(21));
                         var patron = patronService.Retrieve(h.HeldByPatronId);
                         patron.Fine(f);
                         holdingService.CheckIn(n, bc1, brId);

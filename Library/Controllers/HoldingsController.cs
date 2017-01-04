@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Web.Mvc;
 using Library.Models;
+using System.Collections.Generic;
 
 namespace Library.Controllers
 {
@@ -23,7 +24,15 @@ namespace Library.Controllers
         // GET: Holdings/Create
         public ActionResult Create()
         {
-            return View();
+            Holding holding = new Models.Holding();
+            List<Branch> branches = new List<Branch>
+            {
+                new Models.Branch() { Id = 1, Name = "Hey" },
+                new Models.Branch() { Id = 2, Name = "Toes" }
+            };
+
+            holding.BranchesViewList = branches;
+            return View(holding);
         }
 
         // POST: Holdings/Create

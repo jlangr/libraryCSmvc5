@@ -2,6 +2,8 @@ using System;
 using NUnit.Framework;
 using Library.Models;
 
+// TODO add some junk. E.g. try / catch, assert against not null
+
 namespace LibraryTest.Models
 {
     [TestFixture]
@@ -69,7 +71,7 @@ namespace LibraryTest.Models
             
             Assert.IsFalse(holding.IsCheckedOut);
             Assert.That(holding.HeldByPatronId, Is.EqualTo(Holding.NoPatron));
-            Assert.That(holding.CheckOutTimestamp, Is.EqualTo(DateTime.MinValue));
+            Assert.That(holding.CheckOutTimestamp, Is.Null);
             Assert.That(holding.BranchId, Is.EqualTo(newBranchId));
             Assert.That(holding.LastCheckedIn, Is.EqualTo(tomorrow));
         }

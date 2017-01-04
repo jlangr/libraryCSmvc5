@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Web.Mvc;
 
 namespace Library.Models
 {
@@ -10,7 +12,10 @@ namespace Library.Models
         public const int NoPatron = -1;
         public const int CheckedOutBranchId = -1;
 
-        public Holding() { }
+        public Holding()
+            : this("", 0, CheckedOutBranchId)
+        {
+        }
 
         public Holding(string classification, int copyNumber) 
             : this(classification, copyNumber, CheckedOutBranchId)
@@ -19,49 +24,43 @@ namespace Library.Models
 
         public Holding(string classification, int copyNumber, int branchId)
         {
-            CheckOutTimestamp = DateTime.MinValue;
-            LastCheckedIn = DateTime.MinValue;
-            DueDate = DateTime.MinValue;
+            CheckOutTimestamp = null;
+            LastCheckedIn = null;
+            DueDate = null;
             Classification = classification;
             CopyNumber = copyNumber;
             BranchId = branchId;
         }
+
+        // TODO where?
+        public List<Branch> BranchesViewList { get; set; }
 
         public int Id { get; set; }
         public string Classification { get; set; }
         public int CopyNumber { get; set; }
         [NotMapped]
         public CheckoutPolicy CheckoutPolicy { get; set; }
-        public DateTime CheckOutTimestamp { get; set; }
+        public DateTime? CheckOutTimestamp { get; set; }
+        public DateTime? LastCheckedIn { get; set; }
+        public DateTime? DueDate { get; set; }
         public int BranchId { get; set; }
         public int HeldByPatronId { get; set; }
-        public DateTime LastCheckedIn { get; set; }
 
         [NotMapped]
-        public string Barcode
-        {
-            get
-            {
-                return GenerateBarcode(Classification, CopyNumber);
-            }
+        public string Barcode {
+            get { return GenerateBarcode(Classification, CopyNumber); }
         }
-
-        [NotMapped]
-        public DateTime DueDate { get; set; }
 
         [NotMapped]
         public bool IsCheckedOut
         {
-            get
-            {
-                return CheckOutTimestamp != DateTime.MinValue;
-            }
+            get { return CheckOutTimestamp != null; }
         }
 
         public void CheckIn(DateTime timestamp, int toBranchId)
         {
             LastCheckedIn = timestamp;
-            CheckOutTimestamp = DateTime.MinValue;
+            CheckOutTimestamp = null;
             HeldByPatronId = NoPatron;
             BranchId = toBranchId;
         }
@@ -76,7 +75,7 @@ namespace Library.Models
 
         private void CalculateDueDate()
         {
-            DueDate = CheckOutTimestamp.AddDays(CheckoutPolicy.MaximumCheckoutDays());
+            DueDate = CheckOutTimestamp.Value.AddDays(CheckoutPolicy.MaximumCheckoutDays());
         }
 
         public static string GenerateBarcode(string classification, int copyNumber)
