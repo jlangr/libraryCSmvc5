@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 
-namespace Library.Models
+namespace Library.Models.Repositories
 {
     public class HoldingRepository : EntityRepository<Holding>
     {
@@ -15,7 +11,6 @@ namespace Library.Models
         {
             var classification = Holding.ClassificationFromBarcode(barcode);
             var copyNumber = Holding.CopyNumberFromBarcode(barcode);
-            // TODO can this logic be pushed into Holding
             return dbSetFunc(db).First(holding => holding.Classification == classification && holding.CopyNumber == copyNumber);
         }
     }

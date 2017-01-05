@@ -4,9 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Web;
 
-namespace Library.Models
+namespace Library.Models.Repositories
 {
     // TODO add some tests for this stuff
     public class InMemoryRepository<T> : IRepository<T>
@@ -53,6 +52,7 @@ namespace Library.Models
 
         public void Dispose()
         {
+            entities.Clear();
         }
 
         public IEnumerable<T> GetAll()
@@ -67,8 +67,10 @@ namespace Library.Models
             return entities[id];
         }
 
+        // TODO definitely need a test
         public void MarkModified(T entity)
         {
+            // TODO: should effect a save of an entity-i.e. to copy
         }
 
         public int Save()

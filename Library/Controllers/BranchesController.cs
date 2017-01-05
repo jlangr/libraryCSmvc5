@@ -1,18 +1,19 @@
 ﻿using System.Net;
 using System.Web.Mvc;
 using Library.Models;
+using Library.Models.Repositories;
 
 namespace Library.Controllers
 {
     public class BranchesController : Controller
     {
-        IRepository<Branch> repository = new EntityRepository<Branch>(db => db.Branches);
+        BranchRepository repository = new BranchRepository();
 
         public BranchesController()
         {
         }
 
-        public BranchesController(IRepository<Branch> repository)
+        public BranchesController(BranchRepository repository)
         {
             this.repository = repository;
         }

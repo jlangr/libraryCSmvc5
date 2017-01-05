@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Library.Models
+namespace Library.Models.Repositories
 {
     public class BranchRepository : EntityRepository<Branch>
     {

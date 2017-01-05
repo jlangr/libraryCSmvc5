@@ -1,9 +1,8 @@
-﻿using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using System.Web.Mvc;
 using Library.Models;
+using Library.Models.Repositories;
 using System.Collections.Generic;
-using System;
 
 namespace Library.Controllers
 {
@@ -32,7 +31,7 @@ namespace Library.Controllers
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            Holding holding = repository.GetByID(id.Value);
+            var holding = repository.GetByID(id.Value);
             if (holding == null)
                 return HttpNotFound();
             return ViewWithBranches(holding);
