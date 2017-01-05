@@ -45,6 +45,11 @@ namespace Library.Models.Repositories
             return entities.Keys.Max() + 1;
         }
 
+        public T Get(Func<T, bool> predicate)
+        {
+            return entities.Values.Where(predicate).First();
+        }
+
         public void Delete(int id)
         {
             entities.Remove(id);

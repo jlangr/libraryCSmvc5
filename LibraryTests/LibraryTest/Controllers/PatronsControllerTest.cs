@@ -42,7 +42,7 @@ namespace LibraryTests.LibraryTest.Controllers
             [Test]
             public void ReturnsViewOnPatronWhenFound()
             {
-                int id = repo.Create(new Patron() { Name = "Jeff" }); 
+                var id = repo.Create(new Patron() { Name = "Jeff" }); 
 
                 var view = controller.Details(id);
 

@@ -11,7 +11,10 @@ namespace LibraryTests.LibraryTest.Models
         private X x;
         private InMemoryRepository<X> repo;
 
-        [Serializable] class X : Identifiable { public int Id { get; set;  } };
+        [Serializable] class X : Identifiable {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        };
         
         [SetUp]
         public void Initialize()
@@ -41,11 +44,24 @@ namespace LibraryTests.LibraryTest.Models
         [Test]
         public void RetrievedInstanceNotSameAsCreated()
         {
-            int id = repo.Create(x);
+            var id = repo.Create(x);
 
             X retrieved = repo.GetByID(id);
 
             Assert.That(retrieved, Is.Not.SameAs(x));
+        }
+
+        [Test]
+        public void FindsUsingLambda()
+        {
+            X alpha = new X { Name = "alpha" };
+            X beta = new X { Name = "beta" };
+            repo.Create(alpha);
+            int betaId = repo.Create(beta);
+
+            X retrieved = repo.Get(x => x.Name == "beta");
+
+            Assert.That(retrieved.Id, Is.EqualTo(betaId));
         }
     }
 }
