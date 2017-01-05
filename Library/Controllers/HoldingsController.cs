@@ -1,7 +1,9 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Web.Mvc;
 using Library.Models;
 using System.Collections.Generic;
+using System;
 
 namespace Library.Controllers
 {
@@ -15,11 +17,7 @@ namespace Library.Controllers
         {
             var model = new List<HoldingViewModel>();
             foreach (var holding in repository.GetAll())
-            {
-                //var h = new HoldingViewModel(holding);
-                //h.BranchName = branchRepo.GetByID(h.BranchId).Name;
                 model.Add(new HoldingViewModel(holding) { BranchName = branchRepo.GetByID(holding.BranchId).Name });
-            }
             return View(model);
         }
 
@@ -27,27 +25,6 @@ namespace Library.Controllers
         public ActionResult Details(int? id)
         {
             return Edit(id);
-        }
-
-        // GET: Holdings/Create
-        public ActionResult Create()
-        {
-            var holdingVM = new HoldingViewModel();
-            holdingVM.BranchesViewList = new List<Branch>(branchRepo.GetAll());
-            return View(holdingVM);
-        }
-
-        // POST: Holdings/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Classification,CopyNumber,CheckOutTimestamp,BranchId,HeldByPatronId,LastCheckedIn")] Holding holding)
-        {
-            if (ModelState.IsValid)
-            {
-                repository.Create(holding);
-                return RedirectToAction("Index");
-            }
-            return View(holding);
         }
 
         // GET: Holdings/Edit/5
@@ -58,10 +35,34 @@ namespace Library.Controllers
             Holding holding = repository.GetByID(id.Value);
             if (holding == null)
                 return HttpNotFound();
-            var viewModel = new HoldingViewModel(holding);
-            var branches = branchRepo.GetAll();
-            viewModel.BranchesViewList = new List<Branch>(branches);
-            return View(viewModel);
+            return ViewWithBranches(holding);
+        }
+
+        private ActionResult ViewWithBranches(Holding holding)
+        {
+            return View(new HoldingViewModel(holding) { BranchesViewList = new List<Branch>(branchRepo.GetAll()) });
+        }
+
+        // GET: Holdings/Create
+        public ActionResult Create()
+        {
+            return View(new HoldingViewModel { BranchesViewList = new List<Branch>(branchRepo.GetAll()) });
+        }
+
+        // POST: Holdings/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "Id,Classification,CopyNumber,CheckOutTimestamp,BranchId,HeldByPatronId,LastCheckedIn")] Holding holding)
+        {
+            Debug.WriteLine("Creating holding " + holding.Id + " " + holding.Classification);
+            if (ModelState.IsValid)
+            {
+                Debug.WriteLine("yes Create holding " + holding.Id + " " + holding.Classification);
+                repository.Create(holding);
+                return RedirectToAction("Index");
+            }
+            Debug.WriteLine("MODEL NOT VALID");
+            return View(holding);
         }
 
         // POST: Holdings/Edit/5

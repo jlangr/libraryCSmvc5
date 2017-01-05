@@ -9,6 +9,7 @@ namespace Library.Models
         public HoldingViewModel() { }
         public HoldingViewModel(Holding holding)
         {
+            this.Id = holding.Id;
             this.BranchId = holding.BranchId;
             this.CheckoutPolicy = holding.CheckoutPolicy;
             this.CheckOutTimestamp = holding.CheckOutTimestamp;

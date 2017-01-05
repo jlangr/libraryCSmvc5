@@ -16,11 +16,6 @@ namespace Library.Models
         {
         }
 
-        public Holding(string classification, int copyNumber) 
-            : this(classification, copyNumber, Branch.CheckedOutId)
-        {
-        }
-
         public Holding(string classification, int copyNumber, int branchId)
         {
             CheckOutTimestamp = null;

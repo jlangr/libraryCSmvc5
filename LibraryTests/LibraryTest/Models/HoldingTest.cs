@@ -12,15 +12,7 @@ namespace LibraryTest.Models
         const int PatronId = 101;
 
         [Test]
-        public void CreateWithClassificationAndCopyNumber()
-        {
-            var holding = new Holding("QA123", 2);
-            Assert.That(holding.Barcode, Is.EqualTo("QA123:2"));
-            Assert.That(holding.BranchId, Is.EqualTo(Branch.CheckedOutId));
-        }
-
-        [Test]
-        public void CreateSpecifingAlsoBranch()
+        public void CreateWithCommonArguments()
         {
             const int branchId = 10;
             var holding = new Holding("QA123", 2, branchId);
@@ -43,7 +35,7 @@ namespace LibraryTest.Models
         [Test]
         public void Co()
         {
-            var holding = new Holding("X", 1);
+            var holding = new Holding { Classification = "", CopyNumber = 1, BranchId = 1 };
             Assert.IsFalse(holding.IsCheckedOut);
             var now = DateTime.Now;
 
@@ -62,7 +54,7 @@ namespace LibraryTest.Models
         [Test]
         public void CheckIn()
         {
-            var holding = new Holding("X", 1) {BranchId = 1};
+            var holding = new Holding { Classification = "X", BranchId = 1, CopyNumber = 1 };
             holding.CheckOut(DateTime.Now, PatronId, CheckoutPolicies.BookCheckoutPolicy);
             var tomorrow = DateTime.Now.AddDays(1);
             const int newBranchId = 2;
