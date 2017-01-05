@@ -33,6 +33,12 @@ namespace LibraryTest.Models
         }
 
         [Test]
+        public void CopyNumberFromBarcode()
+        {
+            Assert.That(Holding.CopyNumberFromBarcode("QA234:3"), Is.EqualTo(3));
+        }
+
+        [Test]
         public void Co()
         {
             var holding = new Holding { Classification = "", CopyNumber = 1, BranchId = 1 };
@@ -49,6 +55,8 @@ namespace LibraryTest.Models
 
             var dueDate = now.AddDays(policy.MaximumCheckoutDays());
             Assert.That(holding.DueDate, Is.EqualTo(dueDate));
+
+            Assert.That(holding.BranchId, Is.EqualTo(Branch.CheckedOutId));
         }
 
         [Test]

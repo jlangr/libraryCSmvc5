@@ -62,6 +62,7 @@ namespace Library.Models
             HeldByPatronId = patronId;
             CheckoutPolicy = checkoutPolicy;
             CalculateDueDate();
+            BranchId = Branch.CheckedOutId;
         }
 
         private void CalculateDueDate()
@@ -78,6 +79,12 @@ namespace Library.Models
         {
             var colonIndex = barcode.IndexOf(':');
             return barcode.Substring(0, colonIndex);
+        }
+
+        public static int CopyNumberFromBarcode(string barcode)
+        {
+            var colonIndex = barcode.IndexOf(':');
+            return Int32.Parse(barcode.Substring(colonIndex + 1));
         }
     }
 }

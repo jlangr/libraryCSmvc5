@@ -8,9 +8,9 @@ namespace Library.Models
     public class EntityRepository<T> : IRepository<T>
         where T: class, Identifiable
     {
-        private LibraryContext db = new LibraryContext();
+        protected LibraryContext db = new LibraryContext();
 
-        private Func<LibraryContext, DbSet<T>> dbSetFunc;
+        protected Func<LibraryContext, DbSet<T>> dbSetFunc;
 
         public EntityRepository(Func<LibraryContext,DbSet<T>> dbSetFunc)
         {

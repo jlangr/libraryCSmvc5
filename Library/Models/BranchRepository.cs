@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Library.Models
 {
@@ -21,6 +18,12 @@ namespace Library.Models
         override public IEnumerable<Branch> GetAll()
         {
             return new List<Branch> { Branch.CheckedOutBranch }.Concat(base.GetAll());
+        }
+
+        // TODO test
+        public IEnumerable<Branch> GetAllPhysical()
+        {
+            return base.GetAll();
         }
     }
 }

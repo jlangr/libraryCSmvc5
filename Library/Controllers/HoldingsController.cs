@@ -54,14 +54,11 @@ namespace Library.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Classification,CopyNumber,CheckOutTimestamp,BranchId,HeldByPatronId,LastCheckedIn")] Holding holding)
         {
-            Debug.WriteLine("Creating holding " + holding.Id + " " + holding.Classification);
             if (ModelState.IsValid)
             {
-                Debug.WriteLine("yes Create holding " + holding.Id + " " + holding.Classification);
                 repository.Create(holding);
                 return RedirectToAction("Index");
             }
-            Debug.WriteLine("MODEL NOT VALID");
             return View(holding);
         }
 
