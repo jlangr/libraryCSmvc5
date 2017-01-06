@@ -50,6 +50,11 @@ namespace Library.Models.Repositories
             return entities.Values.Where(predicate).First();
         }
 
+        public void Clear()
+        {
+            // TODO!
+        }
+
         public void Delete(int id)
         {
             entities.Remove(id);

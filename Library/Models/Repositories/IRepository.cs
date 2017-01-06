@@ -9,6 +9,7 @@ namespace Library.Models
     public interface IRepository<T>
         where T: Identifiable
     {
+        void Clear();
         int Create(T entity);
         void Delete(int id);
         T GetByID(int id);

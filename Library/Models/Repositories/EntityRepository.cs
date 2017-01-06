@@ -17,6 +17,13 @@ namespace Library.Models.Repositories
             this.dbSetFunc = dbSetFunc;
         }
 
+        public LibraryContext Db {  get { return db;  } }
+
+        public void Clear()
+        {
+            dbSetFunc(db).RemoveRange(dbSetFunc(db));
+        }
+
         virtual public T GetByID(int id)
         {
             return dbSetFunc(db).FirstOrDefault(p => p.Id == id);
