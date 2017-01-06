@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Library.Util
 {
     public class NameNormalizer
-    {
-        public string Normalize(string name)
+	{
+        public string Normalize(string unnormalizedName)
         {
             throw new NotImplementedException();
         }
-    }
+	}
 }

@@ -244,6 +244,7 @@
     <Compile Include="Util\IllegalKeyException.cs" />
     <Compile Include="Util\ListUtil.cs" />
     <Compile Include="Util\MultiMap.cs" />
+    <Compile Include="Junk\NameNormalizerSolution.cs" />
     <Compile Include="Util\NameNormalizer.cs" />
     <Compile Include="Util\TimeService.cs" />
   </ItemGroup>

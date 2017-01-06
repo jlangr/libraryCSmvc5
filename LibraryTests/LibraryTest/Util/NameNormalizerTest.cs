@@ -35,7 +35,7 @@ namespace LibraryTests.LibraryTest.Util
         public void ReturnsLastFirstWhenFirstLastProvided()
         {
             Assert.That(normalizer.Normalize("Joseph Heller"), Is.EqualTo("Heller, Joseph"));
-            //      Assert.That(normalizer.Normalize("Haruki Murakami"), Is.EqualTo("Murakami, Haruki"));
+            Assert.That(normalizer.Normalize("Haruki Murakami"), Is.EqualTo("Murakami, Haruki"));
         }
 
         [Ignore("")]
@@ -63,7 +63,7 @@ namespace LibraryTests.LibraryTest.Util
         [Test]
         public void DoesNotInitializeOneLetterMiddleName()
         {
-            Assert.That(normalizer.Normalize("Henry David Thoreau"), Is.EqualTo("Thoreau, Henry D."));
+            Assert.That(normalizer.Normalize("Harry S Truman"), Is.EqualTo("Truman, Harry S"));
         }
 
         [Ignore("")]
@@ -84,7 +84,15 @@ namespace LibraryTests.LibraryTest.Util
         [Test]
         public void ThrowsWhenNameContainsTwoCommas()
         {
-            Assert.Throws<ArgumentException>(() => normalizer.Normalize("Thurston, Howell, III"));
+            var exception = Assert.Throws<ArgumentException>(() => normalizer.Normalize("Thurston, Howell, III"));
+            Assert.That(exception.Message, Is.EqualTo("name can have at most one comma"));
+        }
+
+        [Ignore("")]
+        [Test]
+        public void OneWordNamesCanHaveSuffixes()
+        {
+            Assert.That(normalizer.Normalize("Madonna, Jr."), Is.EqualTo("Madonna, Jr."));
         }
     }
 }
