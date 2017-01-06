@@ -85,7 +85,7 @@
     <Compile Include="LibraryTest\Models\MovieCheckoutPolicyTest.cs" />
     <Compile Include="LibraryTest\Models\PatronServiceTest.cs" />
     <Compile Include="LibraryTest\Models\PatronTest.cs" />
-    <Compile Include="LibraryTest\Models\ScanStationTest.cs" />
+    <Compile Include="LibraryTest\Models\ScanStation\ScanStationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

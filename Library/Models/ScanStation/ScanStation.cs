@@ -1,7 +1,7 @@
 using System;
 using Library.Util;
 
-namespace Library.Models
+namespace Library.Models.ScanStation
 {
     public class ScanStation
     {

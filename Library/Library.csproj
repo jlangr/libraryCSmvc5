@@ -237,7 +237,7 @@
     <Compile Include="Models\MovieCheckoutPolicy.cs" />
     <Compile Include="Models\Patron.cs" />
     <Compile Include="Models\PatronService.cs" />
-    <Compile Include="Models\ScanStation.cs" />
+    <Compile Include="Models\ScanStation\ScanStation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Util\CollectionUtil.cs" />
