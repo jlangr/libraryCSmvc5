@@ -11,7 +11,7 @@ namespace Library.Models.Repositories
         {
             var classification = Holding.ClassificationFromBarcode(barcode);
             var copyNumber = Holding.CopyNumberFromBarcode(barcode);
-            return dbSetFunc(db).First(holding => holding.Classification == classification && holding.CopyNumber == copyNumber);
+            return dbSetFunc(db).FirstOrDefault(holding => holding.Classification == classification && holding.CopyNumber == copyNumber);
         }
     }
 }

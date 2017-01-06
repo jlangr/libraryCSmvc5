@@ -10,6 +10,7 @@ namespace Library.Controllers
     {
         BranchRepository branchRepo = new BranchRepository();
         HoldingRepository holdingRepo = new HoldingRepository();
+        IRepository<Patron> patronRepo = new EntityRepository<Patron>(db => db.Patrons);
 
         // GET: CheckOut
         public ActionResult Index()
@@ -22,14 +23,33 @@ namespace Library.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(CheckOutViewModel checkout)
         {
+            // TODO is this needed here?
+            //if (!ModelState.IsValid)
+            //    return View(checkout);
+
             checkout.BranchesViewList = new List<Branch>(branchRepo.GetAllPhysical());
-            if (!ModelState.IsValid)
+
+            if (patronRepo.GetByID(checkout.PatronId) == null)
+            {
+                ModelState.AddModelError("CheckOut", "Invalid patron ID.");
                 return View(checkout);
+            }
 
             // TODO create inmemory repo override that takes a function for criteria
             var holding = holdingRepo.FindByBarcode(checkout.Barcode);
+            if (holding == null)
+            {
+                ModelState.AddModelError("CheckOut", "Invalid holding barcode.");
+                return View(checkout);
+            }
             // TODO time source
             // TODO policy?
+            if (holding.IsCheckedOut)
+            {
+                ModelState.AddModelError("CheckOut", "Holding is already checked out.");
+                return View(checkout);
+            }
+
             holding.CheckOut(DateTime.Now, checkout.PatronId, new BookCheckoutPolicy());
             holdingRepo.MarkModified(holding);
             return RedirectToAction("Index");

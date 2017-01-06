@@ -9,7 +9,7 @@ namespace Library.Controllers
     public class HoldingsController : Controller
     {
         IRepository<Holding> repository = new EntityRepository<Holding>(db => db.Holdings);
-        IRepository<Branch> branchRepo = new BranchRepository();
+        BranchRepository branchRepo = new BranchRepository();
 
         // GET: Holdings
         public ActionResult Index()

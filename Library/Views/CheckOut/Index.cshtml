@@ -13,7 +13,9 @@
     <div class="form-horizontal">
         <h4>Checkouts</h4>
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" }) <br />
+        @Html.ValidationMessage("CheckOut", new { @class = "text-danger" } ) <br />
+
 
         <div class="form-group">
             @Html.LabelFor(model => model.BranchId, htmlAttributes: new { @class = "control-label col-md-2" })
