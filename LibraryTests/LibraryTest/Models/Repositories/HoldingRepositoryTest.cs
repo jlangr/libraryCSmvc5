@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace LibraryTests.LibraryTest.Models.Repositories
 {
-    [TestFixture]
+    [TestFixture, Category("slow")]
     public class HoldingRepositoryTest
     {
-
         [Test]
         public void FindByBarcodeReturnsNullWhenNotFound()
         {
