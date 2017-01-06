@@ -6,7 +6,6 @@ namespace Library.Models.Repositories
     {
         public HoldingRepository() : base(db => db.Holdings) { }
 
-        // TODO test
         public Holding FindByBarcode(string barcode)
         {
             var classification = Holding.ClassificationFromBarcode(barcode);

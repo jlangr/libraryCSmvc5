@@ -52,7 +52,7 @@ namespace Library.Models.Repositories
 
         public void Clear()
         {
-            // TODO!
+            entities.Clear();
         }
 
         public void Delete(int id)

@@ -63,5 +63,16 @@ namespace LibraryTests.LibraryTest.Models
 
             Assert.That(retrieved.Id, Is.EqualTo(betaId));
         }
+
+
+        [Test]
+        public void ClearsRepo()
+        {
+            repo.Create(x);
+
+            repo.Clear();
+
+            Assert.That(repo.GetAll(), Is.Empty);
+        }
     }
 }

@@ -96,6 +96,7 @@
     <Compile Include="LibraryTest\Models\PatronTest.cs" />
     <Compile Include="LibraryTest\Models\Repositories\HoldingRepositoryTest.cs" />
     <Compile Include="LibraryTest\Models\ScanStation\ScanStationTest.cs" />
+    <Compile Include="LibraryTest\Util\NameNormalizerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
