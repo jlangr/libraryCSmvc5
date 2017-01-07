@@ -77,7 +77,7 @@ namespace Library.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.MarkModified(patron);
+                repository.Save(patron);
                 return RedirectToAction("Index");
             }
             return View(patron);

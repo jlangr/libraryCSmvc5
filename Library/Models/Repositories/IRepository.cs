@@ -15,6 +15,7 @@ namespace Library.Models
         T GetByID(int id);
         IEnumerable<T> GetAll();
         int Save();
+        void Save(T entity);
         void MarkModified(T entity);
         void Dispose();
     }

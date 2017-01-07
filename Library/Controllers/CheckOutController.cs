@@ -51,7 +51,7 @@ namespace Library.Controllers
             }
 
             holding.CheckOut(DateTime.Now, checkout.PatronId, new BookCheckoutPolicy());
-            holdingRepo.MarkModified(holding);
+            holdingRepo.Save(holding);
             return RedirectToAction("Index");
         }
     }

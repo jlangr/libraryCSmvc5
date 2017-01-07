@@ -66,7 +66,7 @@ namespace Library.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.MarkModified(branch);
+                repository.Save(branch);
                 return RedirectToAction("Index");
             }
             return View(branch);

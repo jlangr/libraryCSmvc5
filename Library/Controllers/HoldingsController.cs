@@ -70,7 +70,7 @@ namespace Library.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.MarkModified(holding);
+                repository.Save(holding);
                 return RedirectToAction("Index");
             }
             return View(holding);

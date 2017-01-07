@@ -1,7 +1,10 @@
-﻿using System;
+﻿/*
+using System;
 using NUnit.Framework;
 using Library.Util;
+*/
 
+// 0. Remove the multiline comments
 // 1. Un-ignore the next commented-out test method.
 // 2. Run all tests in the project.
 // 3. Did the current test fail? If not: You built too much code in a prior step. Undo work for prior tests and try again.
@@ -15,6 +18,7 @@ namespace LibraryTests.LibraryTest.Util
 {
     public class NameNormalizerTest
     {
+        /*
         private NameNormalizer normalizer;
 
         [SetUp]
@@ -94,5 +98,6 @@ namespace LibraryTests.LibraryTest.Util
         {
             Assert.That(normalizer.Normalize("Madonna, Jr."), Is.EqualTo("Madonna, Jr."));
         }
+        */
     }
 }

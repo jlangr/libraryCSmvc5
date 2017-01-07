@@ -9,15 +9,17 @@ namespace Library.Models.Repositories
 {
     // TODO add some tests for this stuff
     public class InMemoryRepository<T> : IRepository<T>
-        where T: Identifiable
+        where T : Identifiable
     {
         private IDictionary<int, T> entities = new Dictionary<int, T>();
+        private ISet<T> modifiedEntities = new HashSet<T>();
+
+        public ISet<T> ModifiedEntities { get { return modifiedEntities; } }
 
         public int Create(T entity)
         {
             entity.Id = NextId();
-            T copy = DeepClone(entity);
-            entities[entity.Id] = copy;
+            entities[entity.Id] = DeepClone(entity);
             return entity.Id;
         }
 
@@ -45,24 +47,27 @@ namespace Library.Models.Repositories
             return entities.Keys.Max() + 1;
         }
 
-        public T Get(Func<T, bool> predicate)
-        {
-            return entities.Values.Where(predicate).First();
-        }
-
         public void Clear()
         {
             entities.Clear();
+            modifiedEntities.Clear();
         }
 
         public void Delete(int id)
         {
             entities.Remove(id);
+            // TODO remove from modified entities?
         }
 
         public void Dispose()
         {
             entities.Clear();
+            modifiedEntities.Clear();
+        }
+
+        public T Get(Func<T, bool> predicate)
+        {
+            return entities.Values.Where(predicate).First();
         }
 
         public IEnumerable<T> GetAll()
@@ -77,14 +82,22 @@ namespace Library.Models.Repositories
             return entities[id];
         }
 
-        // TODO definitely need a test
         public void MarkModified(T entity)
         {
-            // TODO: should effect a save of an entity-i.e. to copy
+            modifiedEntities.Add(entity);
+        }
+        // TODO require HashSet on entity!
+
+        public void Save(T entity)
+        {
+            entities[entity.Id] = DeepClone(entity);
         }
 
         public int Save()
         {
+            foreach (var entity in modifiedEntities)
+                Save(entity);
+            modifiedEntities.Clear();
             return 0;
         }
     }

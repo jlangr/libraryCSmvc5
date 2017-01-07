@@ -56,7 +56,12 @@ namespace Library.Models.Repositories
         public void MarkModified(T entity)
         {
             db.Entry(entity).State = EntityState.Modified;
-            db.SaveChanges();
+        }
+
+        public void Save(T entity)
+        {
+            MarkModified(entity);
+            Save();
         }
 
         public void Dispose()
