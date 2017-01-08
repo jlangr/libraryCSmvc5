@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Library.Models;
 using Library.Models.Repositories;
+using Library.Util;
 
 namespace Library.Controllers
 {
@@ -11,6 +12,12 @@ namespace Library.Controllers
         BranchRepository branchRepo = new BranchRepository();
         HoldingRepository holdingRepo = new HoldingRepository();
         IRepository<Patron> patronRepo = new EntityRepository<Patron>(db => db.Patrons);
+
+        public CheckOutController(HoldingRepository holdingRepo, IRepository<Patron> patronRepo)
+        {
+            this.holdingRepo = holdingRepo;
+            this.patronRepo = patronRepo;
+        }
 
         // GET: CheckOut
         public ActionResult Index()
@@ -35,22 +42,20 @@ namespace Library.Controllers
                 return View(checkout);
             }
 
-            // TODO create inmemory repo override that takes a function for criteria
             var holding = holdingRepo.FindByBarcode(checkout.Barcode);
             if (holding == null)
             {
                 ModelState.AddModelError("CheckOut", "Invalid holding barcode.");
                 return View(checkout);
             }
-            // TODO time source
-            // TODO policy?
             if (holding.IsCheckedOut)
             {
                 ModelState.AddModelError("CheckOut", "Holding is already checked out.");
                 return View(checkout);
             }
 
-            holding.CheckOut(DateTime.Now, checkout.PatronId, new BookCheckoutPolicy());
+            // TODO policy?
+            holding.CheckOut(TimeService.Now, checkout.PatronId, new BookCheckoutPolicy());
             holdingRepo.Save(holding);
             return RedirectToAction("Index");
         }
