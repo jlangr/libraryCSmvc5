@@ -42,6 +42,12 @@ namespace Library.Controllers
                 return View(checkout);
             }
 
+            if (!Holding.IsBarcodeValid(checkout.Barcode))
+            {
+                ModelState.AddModelError("CheckOut", "Invalid holding barcode format.");
+                return View(checkout);
+            }
+
             var holding = holdingRepo.FindByBarcode(checkout.Barcode);
             if (holding == null)
             {

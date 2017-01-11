@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using Library.Models;
+using System.Text.RegularExpressions;
 
 // TODO add some junk. E.g. try / catch, assert against not null
 
@@ -18,6 +19,31 @@ namespace LibraryTest.Models
             var holding = new Holding("QA123", 2, branchId);
             Assert.That(holding.Barcode, Is.EqualTo("QA123:2"));
             Assert.That(holding.BranchId, Is.EqualTo(branchId));
+        }
+
+        [Test]
+        public void IsValidBarcodeReturnsFalseWhenItHasNoColon()
+        {
+            Assert.That(Holding.IsBarcodeValid("ABC"), Is.EqualTo(false));
+        }
+
+        [Test]
+        public void IsValidBarcodeReturnsFalseWhenItsCopyNumberNotPositiveInt()
+        {
+            Assert.That(Holding.IsBarcodeValid("ABC:X"), Is.EqualTo(false));
+            Assert.That(Holding.IsBarcodeValid("ABC:0"), Is.EqualTo(false));
+        }
+
+        [Test]
+        public void IsValidBarcodeReturnsFalseWhenItsClassificationIsEmpty()
+        {
+            Assert.That(Holding.IsBarcodeValid(":1"), Is.EqualTo(false));
+        }
+
+        [Test]
+        public void IsValidBarcodeReturnsTrueWhenFormattedCorrectly()
+        {
+            Assert.That(Holding.IsBarcodeValid("ABC:1"), Is.EqualTo(true));
         }
 
         [Test]

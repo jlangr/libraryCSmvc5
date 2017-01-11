@@ -36,13 +36,25 @@ namespace LibraryTests.LibraryTest.Controllers
         [Test]
         public void GeneratesErrorWhenNoHoldingFoundForBarcode()
         {
-            var patronId = patronRepo.Create(new Patron { Name = "Lu" });
+            var patronId = patronRepo.Create(new Patron { Name = "x" });
             checkout.PatronId = patronId;
             checkout.Barcode = "BAD:1";
 
             var result = controller.Index(checkout) as ViewResult;
 
             Assert.That(controller.SoleErrorMessage(ModelKey), Is.EqualTo("Invalid holding barcode."));
+        }
+
+        [Test]
+        public void GeneratesErrorWhenBarcodeHasInvalidFormat()
+        {
+            var patronId = patronRepo.Create(new Patron { Name = "x" });
+            checkout.PatronId = patronId;
+            checkout.Barcode = "HasNoColon";
+
+            var result = controller.Index(checkout) as ViewResult;
+
+            Assert.That(controller.SoleErrorMessage(ModelKey), Is.EqualTo("Invalid holding barcode format."));
         }
 
         // TODO: don't throw exception when barcode invalid format???

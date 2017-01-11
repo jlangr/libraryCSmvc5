@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Web.Mvc;
+using System.Text.RegularExpressions;
 
 namespace Library.Models
 {
@@ -24,6 +22,11 @@ namespace Library.Models
             Classification = classification;
             CopyNumber = copyNumber;
             BranchId = branchId;
+        }
+
+        public static bool IsBarcodeValid(string barcode)
+        {
+            return new Regex("^.+:[1-9]\\d*$").IsMatch(barcode);
         }
 
         public int Id { get; set; }
