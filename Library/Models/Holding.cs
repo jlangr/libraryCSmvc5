@@ -40,6 +40,11 @@ namespace Library.Models
         public int BranchId { get; set; }
         public int HeldByPatronId { get; set; }
 
+        public override string ToString()
+        {
+            return Barcode + "-> branch:" + BranchId;
+        }
+
         [NotMapped]
         public string Barcode {
             get { return GenerateBarcode(Classification, CopyNumber); }
@@ -48,7 +53,7 @@ namespace Library.Models
         [NotMapped]
         public bool IsCheckedOut
         {
-            get { return CheckOutTimestamp != null; }
+            get { return BranchId == Branch.CheckedOutId; }
         }
 
         public void CheckIn(DateTime timestamp, int toBranchId)
@@ -87,7 +92,7 @@ namespace Library.Models
         public static int CopyNumberFromBarcode(string barcode)
         {
             var colonIndex = barcode.IndexOf(':');
-            return Int32.Parse(barcode.Substring(colonIndex + 1));
+            return int.Parse(barcode.Substring(colonIndex + 1));
         }
     }
 }

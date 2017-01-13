@@ -2,15 +2,18 @@
 
 namespace Library.Models.Repositories
 {
-    public class HoldingRepository : EntityRepository<Holding>
+    // TODO Can we use a delegate here to handle both repo types?
+    public class HoldingRepositoryExtensions
     {
-        public HoldingRepository() : base(db => db.Holdings) { }
-
-        public Holding FindByBarcode(string barcode)
+        public static Holding FindByBarcode(IRepository<Holding> repo, string barcode)
         {
             var classification = Holding.ClassificationFromBarcode(barcode);
             var copyNumber = Holding.CopyNumberFromBarcode(barcode);
-            return dbSetFunc(db).FirstOrDefault(holding => holding.Classification == classification && holding.CopyNumber == copyNumber);
+            var results = repo.FindBy(
+                (holding => {
+                    return holding.Classification == classification && holding.CopyNumber == copyNumber;
+                }));
+            return results.FirstOrDefault();
         }
     }
 }

@@ -1,5 +1,8 @@
+using System;
+
 namespace Library.Models
 {
+    [Serializable]
     public class BookCheckoutPolicy: CheckoutPolicy
     {
         public const decimal DailyFineBasis = 0.10m;

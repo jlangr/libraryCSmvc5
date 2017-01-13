@@ -12,6 +12,7 @@ namespace Library.Models
         void Clear();
         int Create(T entity);
         void Delete(int id);
+        IEnumerable<T> FindBy(Func<T, bool> predicate);
         T GetByID(int id);
         IEnumerable<T> GetAll();
         int Save();

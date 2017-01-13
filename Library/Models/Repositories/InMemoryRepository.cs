@@ -82,6 +82,11 @@ namespace Library.Models.Repositories
             return entities[id];
         }
 
+        public IEnumerable<T> FindBy(Func<T, bool> predicate)
+        {
+            return entities.Values.Where(predicate);
+        }
+
         public void MarkModified(T entity)
         {
             modifiedEntities.Add(entity);

@@ -10,6 +10,11 @@ namespace Library.Models.Repositories
     {
         protected LibraryContext db = new LibraryContext();
 
+        public IEnumerable<T> FindBy(Func<T, bool> predicate)
+        {
+            return dbSetFunc(db).Where(predicate);
+        }
+
         protected Func<LibraryContext, DbSet<T>> dbSetFunc;
 
         public EntityRepository(Func<LibraryContext,DbSet<T>> dbSetFunc)

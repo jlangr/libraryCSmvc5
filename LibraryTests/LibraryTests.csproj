@@ -94,7 +94,6 @@
     <Compile Include="LibraryTest\Models\InMemoryRepositoryTest.cs" />
     <Compile Include="LibraryTest\Models\MasterClassificationServiceTest.cs" />
     <Compile Include="LibraryTest\Models\MovieCheckoutPolicyTest.cs" />
-    <Compile Include="LibraryTest\Models\PatronServiceTest.cs" />
     <Compile Include="LibraryTest\Models\PatronTest.cs" />
     <Compile Include="LibraryTest\Models\Repositories\HoldingRepositoryTest.cs" />
     <Compile Include="LibraryTest\Models\ScanStation\ScanStationTest.cs" />

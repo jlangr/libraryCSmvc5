@@ -12,21 +12,23 @@ namespace LibraryTests.LibraryTest.Models.Repositories
     [TestFixture, Category("slow")]
     public class HoldingRepositoryTest
     {
-        HoldingRepository repo;
+        EntityRepository<Holding> repo;
 
         [SetUp]
         public void Create()
         {
-            repo = new HoldingRepository();
+            repo = new EntityRepository<Holding>(db => db.Holdings);
             repo.Clear();
         }
 
+        // TODO belong elsewhere?
         [Test]
         public void FindByBarcodeReturnsNullWhenNotFound()
         {
-            Assert.That(repo.FindByBarcode("AA:1"), Is.Null);
+            Assert.That(HoldingRepositoryExtensions.FindByBarcode(repo, "AA:1"), Is.Null);
         }
 
+        // TODO belong elsewhere?
         [Test]
         public void FindByBarcodeReturnsHoldingMatchingClassificationAndCopy()
         {
@@ -34,7 +36,7 @@ namespace LibraryTests.LibraryTest.Models.Repositories
 
             repo.Create(holding);
 
-            Assert.That(repo.FindByBarcode("AA123:2"), Is.EqualTo(holding));
+            Assert.That(HoldingRepositoryExtensions.FindByBarcode(repo, "AA123:2"), Is.EqualTo(holding));
         }
     }
 }

@@ -6,7 +6,10 @@ namespace Library.Extensions.SystemWebMvcController
     {
         public static string SoleErrorMessage(this System.Web.Mvc.Controller controller, string modelKey)
         {
-            return controller.ModelState[modelKey].Errors.First().ErrorMessage;
+            var errors = controller.ModelState[modelKey]?.Errors;
+            if (errors != null && errors.Any())
+                return errors.First().ErrorMessage;
+            return "*** No errors ***";
         }
     }
 }

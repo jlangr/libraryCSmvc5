@@ -2,6 +2,7 @@ using System;
 
 namespace Library.Models
 {
+    [Serializable]
     public abstract class CheckoutPolicy
     {
         public abstract int MaximumCheckoutDays();

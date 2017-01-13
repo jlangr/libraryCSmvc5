@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using Library.Models;
 
@@ -9,7 +10,7 @@ namespace LibraryTest.Models
     {
         const int Id = 101;
         const string Name = "Joe";
-        const string Barcode1 = "QA123:1";
+        const int HoldingId = 2;
         private Patron patron;
 
         [SetUp]
@@ -29,16 +30,16 @@ namespace LibraryTest.Models
         [Test]
         public void CheckOut()
         {
-            patron.CheckOut(Barcode1);
-            Assert.That(patron.Holdings, Is.EqualTo(new List<string> { Barcode1 }));
+            patron.CheckOut(HoldingId);
+            Assert.That(patron.HoldingIds, Is.EqualTo(new List<int> { HoldingId }));
         }
 
         [Test]
         public void CheckIn()
         {
-            patron.CheckOut(Barcode1);
-            patron.CheckIn(Barcode1);
-            Assert.That(patron.Holdings, Has.Count.EqualTo(0));
+            patron.CheckOut(HoldingId);
+            patron.CheckIn(HoldingId);
+            Assert.That(patron.HoldingIds.Any(), Is.EqualTo(false));
         }
 
         [Test]

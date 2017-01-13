@@ -1,9 +1,12 @@
 ﻿using System.Web.Mvc;
+using System.Linq;
+using System.Collections.Generic;
 using NUnit.Framework;
 using Library.Controllers;
 using Library.Models;
 using Library.Models.Repositories;
 using Library.Extensions.SystemWebMvcController;
+using System;
 
 namespace LibraryTests.LibraryTest.Controllers
 {
@@ -12,16 +15,24 @@ namespace LibraryTests.LibraryTest.Controllers
     {
         const string ModelKey = "CheckOut";
         CheckOutController controller;
-        HoldingRepository holdingRepo;
+        IRepository<Holding> holdingRepo;
         IRepository<Patron> patronRepo;
         CheckOutViewModel checkout;
+        int branchId;
+        private int patronId;
 
         [SetUp]
         public void Initialize()
         {
-            holdingRepo = new HoldingRepository();
+            holdingRepo = new InMemoryRepository<Holding>(); // TODO this is the live repo!
+
+            var branchRepo = new InMemoryRepository<Branch>();
+            branchId = branchRepo.Create(new Branch() { Name = "b" });
+
             patronRepo = new InMemoryRepository<Patron>();
-            controller = new CheckOutController(holdingRepo, patronRepo);
+            patronId = patronRepo.Create(new Patron { Name = "x" });
+
+            controller = new CheckOutController(branchRepo, holdingRepo, patronRepo);
             checkout = new CheckOutViewModel();
         }
 
@@ -36,9 +47,8 @@ namespace LibraryTests.LibraryTest.Controllers
         [Test]
         public void GeneratesErrorWhenNoHoldingFoundForBarcode()
         {
-            var patronId = patronRepo.Create(new Patron { Name = "x" });
             checkout.PatronId = patronId;
-            checkout.Barcode = "BAD:1";
+            checkout.Barcode = "NONEXISTENT:1";
 
             var result = controller.Index(checkout) as ViewResult;
 
@@ -46,9 +56,22 @@ namespace LibraryTests.LibraryTest.Controllers
         }
 
         [Test]
+        public void GeneratesErrorWhenHoldingAlreadyCheckedOut()
+        {
+            var holding = new Holding("ABC", 1, branchId);
+            holdingRepo.Create(holding);
+            checkout.PatronId = patronId;
+            checkout.Barcode = holding.Barcode;
+            controller.Index(checkout);
+
+            var result = controller.Index(checkout) as ViewResult;
+
+            Assert.That(controller.SoleErrorMessage(ModelKey), Is.EqualTo("Holding is already checked out."));
+        }
+
+        [Test]
         public void GeneratesErrorWhenBarcodeHasInvalidFormat()
         {
-            var patronId = patronRepo.Create(new Patron { Name = "x" });
             checkout.PatronId = patronId;
             checkout.Barcode = "HasNoColon";
 
@@ -57,11 +80,27 @@ namespace LibraryTests.LibraryTest.Controllers
             Assert.That(controller.SoleErrorMessage(ModelKey), Is.EqualTo("Invalid holding barcode format."));
         }
 
-        // TODO: don't throw exception when barcode invalid format???
-        // shows error when unable to find holding by barcode
+        [Test]
+        public void StoresHoldingOnPatronOnSuccess()
+        {
+            // TODO simplify
+            var holding = new Holding { Classification = "ABC", CopyNumber = 1 };
+            holding.CheckIn(DateTime.Now, branchId);
+            var holdingId = holdingRepo.Create(holding);
+            checkout.PatronId = patronId;
+            checkout.Barcode = "ABC:1";
+
+            var result = controller.Index(checkout) as ViewResult;
+
+            var patron = patronRepo.GetByID(patronId);
+            Assert.That(patron.HoldingIds, Is.EqualTo(new List<int> { holdingId }));
+        }
+
         // shows error when holding is already checked out
+        // ? validate patron ID
         // on success:
         //    patron contains holding
+        //    holding marked as checked out
         //    redirects back to Index
     }
 }

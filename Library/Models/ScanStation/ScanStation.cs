@@ -11,7 +11,7 @@ namespace Library.Models.ScanStation
         private readonly int brId;
         private int cur = NoPatron;
         private DateTime cts;
-        private readonly PatronService patronService = new PatronService();
+        //private readonly PatronService patronService = new PatronService();
 
         public ScanStation(int branchId, IClassificationService classificationService)
         {
@@ -48,10 +48,10 @@ namespace Library.Models.ScanStation
                     Material m = null;
                     m = classificationService.Retrieve(h.Classification);
                     var fine = m.CheckoutPolicy.FineAmount(h.CheckOutTimestamp.Value, cis);
-                    var p = patronService.Retrieve(patronId);
-                    p.Fine(fine);
+                    //var p = patronService.Retrieve(patronId);
+                    //p.Fine(fine);
                     holdingService.CheckIn(cis, bc, brId);
-                    patronService.CheckIn(patronId, bc);
+                    //patronService.CheckIn(patronId, bc);
                 }
                 else // checking out book already cked out by other patron
                 {
@@ -61,15 +61,15 @@ namespace Library.Models.ScanStation
                         var n = TimeService.Now;
                         var t = TimeService.Now.AddDays(21);
                         var f = classificationService.Retrieve(h.Classification).CheckoutPolicy.FineAmount(h.CheckOutTimestamp.Value, n.AddDays(21));
-                        var patron = patronService.Retrieve(h.HeldByPatronId);
-                        patron.Fine(f);
+                        //var patron = patronService.Retrieve(h.HeldByPatronId);
+                        //patron.Fine(f);
                         holdingService.CheckIn(n, bc1, brId);
                         // co
                         holdingService.CheckOut(cts, bc1, cur, CheckoutPolicies.BookCheckoutPolicy);
-                        patronService.CheckOut(cur, bc1);
+                        //patronService.CheckOut(cur, bc1);
                         t.AddDays(1);
                         n = t;
-                        patronService.CheckIn(patron.Id, bc);
+                        //patronService.CheckIn(patron.Id, bc);
                     }
                     else // not checking out book already cked out by other patron
                     {
@@ -82,7 +82,7 @@ namespace Library.Models.ScanStation
                 if (cur != NoPatron) // check in book
                 {
                     holdingService.CheckOut(cts, h.Barcode, cur, CheckoutPolicies.BookCheckoutPolicy);
-                    patronService.CheckOut(cur, h.Barcode);
+                    //patronService.CheckOut(cur, h.Barcode);
                 }
                 else
                     throw new CheckoutException();

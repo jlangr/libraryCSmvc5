@@ -7,11 +7,14 @@ namespace Library.Models
     [Serializable]
     public class Patron: Identifiable
     {
-        public Patron() { }
+        public Patron()
+        {
+            HoldingIds = new List<int>();
+        }
 
         public Patron(int id, string name)
+            : this()
         {
-            Holdings = new List<string>();
             Name = name;
             Id = id;
         }
@@ -26,16 +29,17 @@ namespace Library.Models
             Balance += amount;
         }
 
-        public void CheckOut(string barcode)
+        public void CheckOut(int id)
         {
-            Holdings.Add(barcode);
+            HoldingIds.Add(id);
         }
 
-        public IList<string> Holdings { get; private set; }
+        // TODO use a set instead?
+        public IList<int> HoldingIds { get; set; }
 
-        public void CheckIn(string barcode)
+        public void CheckIn(int holdingId)
         {
-            Holdings.Remove(barcode);
+            HoldingIds.Remove(holdingId);
         }
 
         public void Remit(decimal amount)
