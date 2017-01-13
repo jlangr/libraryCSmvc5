@@ -8,8 +8,14 @@ namespace Library.Controllers
 {
     public class HoldingsController : Controller
     {
-        IRepository<Holding> repository = new EntityRepository<Holding>(db => db.Holdings);
-        BranchRepository branchRepo = new BranchRepository();
+        IRepository<Holding> repository;
+        IRepository<Branch> branchRepo;
+
+        HoldingsController()
+        {
+            repository = new EntityRepository<Holding>(db => db.Holdings);
+            branchRepo = new EntityRepository<Branch>(db => db.Branches);
+        }
 
         // GET: Holdings
         public ActionResult Index()

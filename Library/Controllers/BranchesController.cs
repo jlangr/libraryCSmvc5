@@ -7,13 +7,14 @@ namespace Library.Controllers
 {
     public class BranchesController : Controller
     {
-        BranchRepository repository = new BranchRepository();
+        IRepository<Branch> repository;
 
         public BranchesController()
         {
+            repository = new EntityRepository<Branch>(db => db.Branches);
         }
 
-        public BranchesController(BranchRepository repository)
+        public BranchesController(IRepository<Branch> repository)
         {
             this.repository = repository;
         }

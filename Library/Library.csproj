@@ -215,9 +215,9 @@
     <Compile Include="Models\BookCheckoutPolicy.cs" />
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\CheckOutViewModel.cs" />
-    <Compile Include="Models\Repositories\HoldingRepository.cs" />
+    <Compile Include="Models\Repositories\HoldingRepositoryExtensions.cs" />
     <Compile Include="Models\HoldingViewModel.cs" />
-    <Compile Include="Models\Repositories\BranchRepository.cs" />
+    <Compile Include="Models\Repositories\BranchRepositoryExtensions.cs" />
     <Compile Include="Models\BranchService.cs" />
     <Compile Include="Models\CheckoutException.cs" />
     <Compile Include="Models\CheckoutPolicies.cs" />
