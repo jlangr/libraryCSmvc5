@@ -9,9 +9,16 @@ namespace Library.Controllers
 {
     public class CheckOutController : Controller
     {
-        IRepository<Branch> branchRepo = new EntityRepository<Branch>(db => db.Branches);
-        IRepository<Holding> holdingRepo = new EntityRepository<Holding>(db => db.Holdings);
-        IRepository<Patron> patronRepo = new EntityRepository<Patron>(db => db.Patrons);
+        IRepository<Branch> branchRepo;
+        IRepository<Holding> holdingRepo;
+        IRepository<Patron> patronRepo;
+
+        public CheckOutController()
+        {
+            branchRepo = new EntityRepository<Branch>(db => db.Branches);
+            holdingRepo = new EntityRepository<Holding>(db => db.Holdings);
+            patronRepo = new EntityRepository<Patron>(db => db.Patrons);
+        }
 
         public CheckOutController(IRepository<Branch> branchRepo, IRepository<Holding> holdingRepo, IRepository<Patron> patronRepo)
         {

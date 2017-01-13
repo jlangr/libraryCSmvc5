@@ -24,7 +24,7 @@ namespace LibraryTests.LibraryTest.Controllers
         [SetUp]
         public void Initialize()
         {
-            holdingRepo = new InMemoryRepository<Holding>(); // TODO this is the live repo!
+            holdingRepo = new InMemoryRepository<Holding>();
 
             var branchRepo = new InMemoryRepository<Branch>();
             branchId = branchRepo.Create(new Branch() { Name = "b" });

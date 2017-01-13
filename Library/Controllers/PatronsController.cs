@@ -7,10 +7,11 @@ namespace Library.Controllers
 {
     public class PatronsController : Controller
     {
-        IRepository<Patron> repository = new EntityRepository<Patron>(db => db.Patrons);
+        IRepository<Patron> repository;
 
         public PatronsController()
         {
+            repository = new EntityRepository<Patron>(db => db.Patrons);
         }
 
         public PatronsController(IRepository<Patron> repository)
