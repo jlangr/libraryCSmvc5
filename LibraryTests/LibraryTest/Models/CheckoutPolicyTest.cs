@@ -15,7 +15,7 @@ namespace LibraryTest.Models
             var checkoutDate = DateTime.Now;
             var checkinDate = DateTime.Now.AddDays(maxCheckoutDays);
 
-            Assert.That(new StubCheckoutPolicy().DaysLate(checkoutDate, checkinDate, maxCheckoutDays), Is.EqualTo(0));
+            Assert.That(new StubCheckoutPolicy().DaysLate(checkoutDate, checkinDate, maxCheckoutDays), Is.Zero);
         }
 
         [Test]
@@ -33,8 +33,8 @@ namespace LibraryTest.Models
         public void ACoupleYearsLate()
         {
             const int maxCheckoutDays = 2;
-            var checkoutDate = new DateTime(2009, 1, 1);
-            var checkinDate = new DateTime(2011, 1, 1);
+            var checkoutDate = new DateTime(2017, 1, 1);
+            var checkinDate = new DateTime(2019, 1, 1);
             Assert.That(
                 new StubCheckoutPolicy().DaysLate(checkoutDate, checkinDate, maxCheckoutDays), Is.EqualTo(365 * 2 - 2));
         }

@@ -24,26 +24,26 @@ namespace LibraryTest.Models
         [Test]
         public void IsValidBarcodeReturnsFalseWhenItHasNoColon()
         {
-            Assert.That(Holding.IsBarcodeValid("ABC"), Is.EqualTo(false));
+            Assert.That(Holding.IsBarcodeValid("ABC"), Is.False);
         }
 
         [Test]
         public void IsValidBarcodeReturnsFalseWhenItsCopyNumberNotPositiveInt()
         {
-            Assert.That(Holding.IsBarcodeValid("ABC:X"), Is.EqualTo(false));
-            Assert.That(Holding.IsBarcodeValid("ABC:0"), Is.EqualTo(false));
+            Assert.That(Holding.IsBarcodeValid("ABC:X"), Is.False);
+            Assert.That(Holding.IsBarcodeValid("ABC:0"), Is.False);
         }
 
         [Test]
         public void IsValidBarcodeReturnsFalseWhenItsClassificationIsEmpty()
         {
-            Assert.That(Holding.IsBarcodeValid(":1"), Is.EqualTo(false));
+            Assert.That(Holding.IsBarcodeValid(":1"), Is.False);
         }
 
         [Test]
         public void IsValidBarcodeReturnsTrueWhenFormattedCorrectly()
         {
-            Assert.That(Holding.IsBarcodeValid("ABC:1"), Is.EqualTo(true));
+            Assert.That(Holding.IsBarcodeValid("ABC:1"));
         }
 
         [Test]

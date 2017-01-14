@@ -21,7 +21,7 @@ namespace LibraryTest.Models
         {
             var checkoutDate = DateTime.Now;
             var checkinDate = checkoutDate.AddDays(policy.MaximumCheckoutDays());
-            Assert.That(policy.DaysLate(checkoutDate, checkinDate), Is.EqualTo(0));
+            Assert.That(policy.DaysLate(checkoutDate, checkinDate), Is.Zero);
         }
 
         [Test]

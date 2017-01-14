@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using Library.Models;
 using Library.Models.Repositories;
@@ -148,7 +149,7 @@ namespace LibraryTests.LibraryTest.Models
 
             repo.Clear();
 
-            Assert.That(repo.ModifiedEntities.Count, Is.EqualTo(0));
+            Assert.That(repo.ModifiedEntities.Any(), Is.False);
         }
     }
 }

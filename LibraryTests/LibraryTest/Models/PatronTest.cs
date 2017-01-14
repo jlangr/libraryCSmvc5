@@ -24,13 +24,14 @@ namespace LibraryTest.Models
         {
             Assert.That(patron.Name, Is.EqualTo(Name));
             Assert.That(patron.Id, Is.EqualTo(Id));
-            Assert.That(patron.Balance, Is.EqualTo(0));
+            Assert.That(patron.Balance, Is.Zero);
         }
 
         [Test]
-        public void CheckOut()
+        public void HoldingIdStoredOnCheckOut()
         {
             patron.CheckOut(HoldingId);
+
             Assert.That(patron.HoldingIds, Is.EqualTo(new List<int> { HoldingId }));
         }
 
@@ -38,8 +39,10 @@ namespace LibraryTest.Models
         public void CheckIn()
         {
             patron.CheckOut(HoldingId);
+
             patron.CheckIn(HoldingId);
-            Assert.That(patron.HoldingIds.Any(), Is.EqualTo(false));
+
+            Assert.That(patron.HoldingIds.Any(), Is.False);
         }
 
         [Test]
@@ -55,7 +58,9 @@ namespace LibraryTest.Models
         public void RemitReducesBalance()
         {
             patron.Fine(1.10m);
+
             patron.Remit(0.20m);
+
             Assert.That(patron.Balance, Is.EqualTo(0.90m));
         }
     }
