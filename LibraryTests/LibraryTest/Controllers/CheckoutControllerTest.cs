@@ -97,10 +97,18 @@ namespace LibraryTests.LibraryTest.Controllers
             Assert.That(patron.HoldingIds, Is.EqualTo(new List<int> { holdingId }));
         }
 
-        // shows error when holding is already checked out
-        // on success:
-        //    patron contains holding
-        //    holding marked as checked out
+        [Test]
+        public void MarksHoldingAsCheckedOutOnSuccess()
+        {
+            var holdingId = holdingRepo.Create(aCheckedInHolding);
+            checkout = new CheckOutViewModel { Barcode = aCheckedInHolding.Barcode, PatronId = someValidPatronId };
+
+            var result = controller.Index(checkout) as ViewResult;
+
+            var retrievedHolding = holdingRepo.GetByID(holdingId);
+            Assert.That(retrievedHolding.IsCheckedOut);
+        }
+
         //    redirects back to Index
     }
 }
