@@ -1,5 +1,4 @@
 ﻿using System.Web.Mvc;
-using System.Linq;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Library.Controllers;
@@ -19,7 +18,8 @@ namespace LibraryTests.LibraryTest.Controllers
         IRepository<Patron> patronRepo;
         CheckOutViewModel checkout;
         int branchId;
-        private int patronId;
+        private int someValidPatronId;
+        private Holding aCheckedInHolding;
 
         [SetUp]
         public void Initialize()
@@ -30,15 +30,24 @@ namespace LibraryTests.LibraryTest.Controllers
             branchId = branchRepo.Create(new Branch() { Name = "b" });
 
             patronRepo = new InMemoryRepository<Patron>();
-            patronId = patronRepo.Create(new Patron { Name = "x" });
+            someValidPatronId = patronRepo.Create(new Patron { Name = "x" });
 
             controller = new CheckOutController(branchRepo, holdingRepo, patronRepo);
             checkout = new CheckOutViewModel();
         }
 
+        [SetUp]
+        public void CreateCheckedInHolding()
+        {
+            aCheckedInHolding = new Holding { Classification = "ABC", CopyNumber = 1 };
+            aCheckedInHolding.CheckIn(DateTime.Now, branchId);
+        }
+
         [Test]
         public void GeneratesErrorWhenPatronIdInvalid()
         {
+            checkout = new CheckOutViewModel { PatronId = 0, Barcode = aCheckedInHolding.Barcode };
+
             var result = controller.Index(checkout) as ViewResult;
 
             Assert.That(controller.SoleErrorMessage(ModelKey), Is.EqualTo("Invalid patron ID."));
@@ -47,8 +56,7 @@ namespace LibraryTests.LibraryTest.Controllers
         [Test]
         public void GeneratesErrorWhenNoHoldingFoundForBarcode()
         {
-            checkout.PatronId = patronId;
-            checkout.Barcode = "NONEXISTENT:1";
+            checkout = new CheckOutViewModel { Barcode = "NONEXISTENT:1", PatronId = someValidPatronId };
 
             var result = controller.Index(checkout) as ViewResult;
 
@@ -58,10 +66,8 @@ namespace LibraryTests.LibraryTest.Controllers
         [Test]
         public void GeneratesErrorWhenHoldingAlreadyCheckedOut()
         {
-            var holding = new Holding("ABC", 1, branchId);
-            holdingRepo.Create(holding);
-            checkout.PatronId = patronId;
-            checkout.Barcode = holding.Barcode;
+            holdingRepo.Create(aCheckedInHolding);
+            checkout = new CheckOutViewModel { Barcode = aCheckedInHolding.Barcode, PatronId = someValidPatronId };
             controller.Index(checkout);
 
             var result = controller.Index(checkout) as ViewResult;
@@ -72,8 +78,7 @@ namespace LibraryTests.LibraryTest.Controllers
         [Test]
         public void GeneratesErrorWhenBarcodeHasInvalidFormat()
         {
-            checkout.PatronId = patronId;
-            checkout.Barcode = "HasNoColon";
+            checkout = new CheckOutViewModel { Barcode = "HasNoColon", PatronId = someValidPatronId };
 
             var result = controller.Index(checkout) as ViewResult;
 
@@ -83,21 +88,16 @@ namespace LibraryTests.LibraryTest.Controllers
         [Test]
         public void StoresHoldingOnPatronOnSuccess()
         {
-            // TODO simplify
-            var holding = new Holding { Classification = "ABC", CopyNumber = 1 };
-            holding.CheckIn(DateTime.Now, branchId);
-            var holdingId = holdingRepo.Create(holding);
-            checkout.PatronId = patronId;
-            checkout.Barcode = "ABC:1";
+            var holdingId = holdingRepo.Create(aCheckedInHolding);
+            checkout = new CheckOutViewModel { Barcode = aCheckedInHolding.Barcode, PatronId = someValidPatronId };
 
             var result = controller.Index(checkout) as ViewResult;
 
-            var patron = patronRepo.GetByID(patronId);
+            var patron = patronRepo.GetByID(someValidPatronId);
             Assert.That(patron.HoldingIds, Is.EqualTo(new List<int> { holdingId }));
         }
 
         // shows error when holding is already checked out
-        // ? validate patron ID
         // on success:
         //    patron contains holding
         //    holding marked as checked out
