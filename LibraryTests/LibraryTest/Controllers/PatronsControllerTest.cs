@@ -50,9 +50,30 @@ namespace LibraryTests.LibraryTest.Controllers
                 Assert.That(viewPatron.Name, Is.EqualTo("Jeff"));
             }
         }
+
+        public class Holdings: PatronsControllerTest
+        {
+            [Test]
+            public void ReturnsEmptyWhenPatronHasNotCheckedOutBooks()
+            {
+                var id = repo.Create(new Patron());
+
+                var view = (controller.Holdings(id) as ViewResult).Model as IEnumerable<Holding>;
+
+                Assert.That(!view.Any());
+            }
+        }
         
         public class Index: PatronsControllerTest
         {
+            private InMemoryRepository<Holding> holdingRepo;
+
+            [SetUp]
+            public void Initialize()
+            {
+                holdingRepo = new InMemoryRepository<Holding>();
+            }
+
             [Test]
             public void RetrievesViewOnAllPatrons()
             {

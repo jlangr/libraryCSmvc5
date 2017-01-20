@@ -12,7 +12,6 @@ namespace LibraryTests.LibraryTest.Controllers
     [TestFixture]
     public class CheckInControllerTest
     {
-
         private InMemoryRepository<Branch> branchRepo;
         private CheckInViewModel checkin;
         private CheckInController controller;

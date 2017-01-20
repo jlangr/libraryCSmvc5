@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Library.Models;
 using Library.Models.Repositories;
@@ -55,6 +56,12 @@ namespace Library.Controllers
             if (patron == null)
                 return HttpNotFound();
             return View(patron);
+        }
+
+        public ActionResult Holdings(int id)
+        {
+            var holdings = new List<Holding>();
+            return View(holdings);
         }
 
         // GET: Patrons/Delete/5
