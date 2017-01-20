@@ -197,6 +197,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BranchesController.cs" />
+    <Compile Include="Controllers\CheckInController.cs" />
     <Compile Include="Controllers\CheckOutController.cs" />
     <Compile Include="Controllers\HoldingsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -214,6 +215,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BookCheckoutPolicy.cs" />
     <Compile Include="Models\Branch.cs" />
+    <Compile Include="Models\CheckInViewModel.cs" />
     <Compile Include="Models\CheckOutViewModel.cs" />
     <Compile Include="Models\Repositories\HoldingRepositoryExtensions.cs" />
     <Compile Include="Models\HoldingViewModel.cs" />

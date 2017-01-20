@@ -72,8 +72,8 @@ namespace Library.Controllers
             // TODO policy?
             holding.CheckOut(TimeService.Now, checkout.PatronId, new BookCheckoutPolicy());
             holdingRepo.Save(holding);
-            patron.CheckOut(holding.Id);
-            patronRepo.Save(patron);
+            //patron.CheckOut(holding.Id);
+            //patronRepo.Save(patron);
             return RedirectToAction("Index");
         }
     }

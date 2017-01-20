@@ -83,6 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LibraryTest\Controllers\CheckInControllerTest.cs" />
     <Compile Include="LibraryTest\Controllers\CheckOutControllerTest.cs" />
     <Compile Include="VideoStore\CustomerTest.cs" />
     <Compile Include="LibraryTest\Controllers\PatronsControllerTest.cs" />

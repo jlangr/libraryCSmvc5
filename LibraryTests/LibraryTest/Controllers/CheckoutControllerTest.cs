@@ -99,17 +99,17 @@ namespace LibraryTests.LibraryTest.Controllers
                 checkout = new CheckOutViewModel { Barcode = aCheckedInHolding.Barcode, PatronId = someValidPatronId };
             }
 
-            [Test]
-            public void StoresHoldingOnPatron()
-            {
-                controller.Index(checkout);
+            //[Test]
+            //public void ThenStoresHoldingOnPatron()
+            //{
+            //    controller.Index(checkout);
 
-                var patron = patronRepo.GetByID(someValidPatronId);
-                Assert.That(patron.HoldingIds, Is.EqualTo(new List<int> { holdingId }));
-            }
+            //    var patron = patronRepo.GetByID(someValidPatronId);
+            //    Assert.That(patron.HoldingIds, Is.EqualTo(new List<int> { holdingId }));
+            //}
 
             [Test]
-            public void MarksHoldingAsCheckedOut()
+            public void ThenMarksHoldingAsCheckedOut()
             {
                 controller.Index(checkout);
 
@@ -118,7 +118,7 @@ namespace LibraryTests.LibraryTest.Controllers
             }
 
             [Test]
-            public void RedirectsToIndex()
+            public void ThenRedirectsToIndex()
             {
                 var result = controller.Index(checkout) as RedirectToRouteResult;
 

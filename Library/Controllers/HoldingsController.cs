@@ -11,19 +11,28 @@ namespace Library.Controllers
         IRepository<Holding> repository;
         IRepository<Branch> branchRepo;
 
-        HoldingsController()
+        public HoldingsController()
         {
             repository = new EntityRepository<Holding>(db => db.Holdings);
             branchRepo = new EntityRepository<Branch>(db => db.Branches);
         }
 
         // GET: Holdings
+        // TODO test around alternate branch name. Refactor?
         public ActionResult Index()
         {
             var model = new List<HoldingViewModel>();
             foreach (var holding in repository.GetAll())
-                model.Add(new HoldingViewModel(holding) { BranchName = branchRepo.GetByID(holding.BranchId).Name });
+                model.Add(new HoldingViewModel(holding) { BranchName = BranchName(holding.BranchId) });
             return View(model);
+        }
+
+        // TODO: Where might this go
+        string BranchName(int branchId)
+        {
+            if (branchId == Branch.CheckedOutId)
+                return "** checked out **";
+            return branchRepo.GetByID(branchId).Name;
         }
 
         // GET: Holdings/Details/5
