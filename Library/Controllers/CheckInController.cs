@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using Library.Models;
 using Library.Models.Repositories;
 using System.Web.Mvc;
@@ -34,7 +31,6 @@ namespace Library.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(CheckInViewModel checkin)
         {
-            Console.WriteLine("checking in!:" + checkin.Barcode);
             checkin.BranchesViewList = new List<Branch>(BranchRepositoryExtensions.GetAll(branchRepo));
 
             if (!Holding.IsBarcodeValid(checkin.Barcode))

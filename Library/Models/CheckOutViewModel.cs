@@ -8,7 +8,6 @@ namespace Library.Models
     {
         [DisplayName("Branch")]
         public List<Branch> BranchesViewList { get; set; }
-        public int BranchId { get; set; }
         [DisplayName("Holding Barcode"), Required()]
         public string Barcode { get; set; }
         [DisplayName("Patron ID"), Required()]

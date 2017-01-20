@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using Library.Models;
 using Library.Models.Repositories;
@@ -9,6 +8,7 @@ namespace Library.Controllers
 {
     public class CheckOutController : Controller
     {
+        public const string ModelKey = "CheckOut";
         IRepository<Branch> branchRepo;
         IRepository<Holding> holdingRepo;
         IRepository<Patron> patronRepo;
@@ -47,33 +47,32 @@ namespace Library.Controllers
             var patron = patronRepo.GetByID(checkout.PatronId);
             if (patron == null)
             {
-                ModelState.AddModelError("CheckOut", "Invalid patron ID.");
+                ModelState.AddModelError(ModelKey, "Invalid patron ID.");
                 return View(checkout);
             }
 
             if (!Holding.IsBarcodeValid(checkout.Barcode))
             {
-                ModelState.AddModelError("CheckOut", "Invalid holding barcode format.");
+                ModelState.AddModelError(ModelKey, "Invalid holding barcode format.");
                 return View(checkout);
             }
 
             var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, checkout.Barcode);
             if (holding == null)
             {
-                ModelState.AddModelError("CheckOut", "Invalid holding barcode.");
+                ModelState.AddModelError(ModelKey, "Invalid holding barcode.");
                 return View(checkout);
             }
             if (holding.IsCheckedOut)
             {
-                ModelState.AddModelError("CheckOut", "Holding is already checked out.");
+                ModelState.AddModelError(ModelKey, "Holding is already checked out.");
                 return View(checkout);
             }
 
             // TODO policy?
             holding.CheckOut(TimeService.Now, checkout.PatronId, new BookCheckoutPolicy());
             holdingRepo.Save(holding);
-            //patron.CheckOut(holding.Id);
-            //patronRepo.Save(patron);
+
             return RedirectToAction("Index");
         }
     }

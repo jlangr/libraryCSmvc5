@@ -5,8 +5,6 @@ using Library.Models.Repositories;
 using Library.Util;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web.Mvc;
 
 namespace LibraryTests.LibraryTest.Controllers
@@ -92,11 +90,9 @@ namespace LibraryTests.LibraryTest.Controllers
                 TimeService.NextTime = now;
             }
 
-            // TODO if branch is defined on CheckOutViewModel, see if it can be deleted
-
-            void CheckInHolding()
+            RedirectToRouteResult CheckInHolding()
             {
-                controller.Index(new CheckInViewModel { Barcode = aCheckedOutHolding.Barcode, BranchId = someValidBranchId });
+                return controller.Index(new CheckInViewModel { Barcode = aCheckedOutHolding.Barcode, BranchId = someValidBranchId }) as RedirectToRouteResult;
             }
 
             [Test]
@@ -130,6 +126,14 @@ namespace LibraryTests.LibraryTest.Controllers
 
                 Assert.That(holdingRepo.GetByID(aCheckedOutHolding.Id).LastCheckedIn, Is.EqualTo(now));
             }
+
+            [Test]
+            public void ThenRedirectsToIndex()
+            {
+                Assert.That(CheckInHolding().RouteValues["action"], Is.EqualTo("Index"));
+            }
         }
+
+        // TODO FINES on late checkin
     }
 }
