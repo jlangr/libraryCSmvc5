@@ -5,6 +5,8 @@ using NUnit.Framework;
 using Library.Controllers;
 using Library.Models;
 using Library.Models.Repositories;
+using Library.Extensions.SystemWebMvcController;
+using System;
 
 namespace LibraryTests.LibraryTest.Controllers
 {
@@ -12,13 +14,15 @@ namespace LibraryTests.LibraryTest.Controllers
     public class PatronsControllerTest
     {
         private PatronsController controller;
-        private InMemoryRepository<Patron> repo;
+        private InMemoryRepository<Patron> patronRepo;
+        private InMemoryRepository<Holding> holdingRepo;
 
         [SetUp]
         public void Initialize()
         {
-            repo = new InMemoryRepository<Patron>();
-            controller = new PatronsController(repo);
+            patronRepo = new InMemoryRepository<Patron>();
+            holdingRepo = new InMemoryRepository<Holding>();
+            controller = new PatronsController(patronRepo, holdingRepo);
         }
 
         public class Details: PatronsControllerTest
@@ -42,7 +46,7 @@ namespace LibraryTests.LibraryTest.Controllers
             [Test]
             public void ReturnsViewOnPatronWhenFound()
             {
-                var id = repo.Create(new Patron() { Name = "Jeff" }); 
+                var id = patronRepo.Create(new Patron() { Name = "Jeff" }); 
 
                 var view = controller.Details(id);
 
@@ -53,32 +57,64 @@ namespace LibraryTests.LibraryTest.Controllers
 
         public class Holdings: PatronsControllerTest
         {
+            IRepository<Branch> branchRepo = new InMemoryRepository<Branch>();
+            CheckOutController checkoutController;
+            int patronId;
+            int branchId;
+
+            [SetUp]
+            public void CreateCheckoutController()
+            {
+                checkoutController = new CheckOutController(branchRepo, holdingRepo, patronRepo);
+            }
+
+            [SetUp]
+            public void CreatePatron()
+            {
+                patronId = patronRepo.Create(new Patron());
+            }
+
+            [SetUp]
+            public void CreateBranch()
+            {
+                branchId = branchRepo.Create(new Branch());
+            }
+
             [Test]
             public void ReturnsEmptyWhenPatronHasNotCheckedOutBooks()
             {
-                var id = repo.Create(new Patron());
-
-                var view = (controller.Holdings(id) as ViewResult).Model as IEnumerable<Holding>;
+                var view = (controller.Holdings(patronId) as ViewResult).Model as IEnumerable<Holding>;
 
                 Assert.That(!view.Any());
+            }
+
+            [Test]
+            public void ReturnsListWithCheckedOutHolding()
+            {
+                int holdingId1 = CreateCheckedOutHolding(patronId, checkoutController, 1);
+                int holdingId2 = CreateCheckedOutHolding(patronId, checkoutController, 2);
+
+                var view = (controller.Holdings(patronId) as ViewResult).Model as IEnumerable<Holding>;
+
+                Assert.That(view.Select(h => h.Id), Is.EqualTo(new List<int> { holdingId1, holdingId2 }));
+            }
+
+            private int CreateCheckedOutHolding(int id, CheckOutController checkoutController, int copyNumber)
+            {
+                var holdingId = holdingRepo.Create(new Holding { Classification = "X", CopyNumber = copyNumber, BranchId = branchId });
+                var checkOutViewModel = new CheckOutViewModel { Barcode = $"X:{copyNumber}", PatronId = id };
+                var result = checkoutController.Index(checkOutViewModel) as ViewResult;
+                return holdingId;
             }
         }
         
         public class Index: PatronsControllerTest
         {
-            private InMemoryRepository<Holding> holdingRepo;
-
-            [SetUp]
-            public void Initialize()
-            {
-                holdingRepo = new InMemoryRepository<Holding>();
-            }
-
             [Test]
             public void RetrievesViewOnAllPatrons()
             {
-                repo.Create(new Patron { Name = "Alpha" }); 
-                repo.Create(new Patron { Name = "Beta" }); 
+                patronRepo.Create(new Patron { Name = "Alpha" }); 
+                patronRepo.Create(new Patron { Name = "Beta" }); 
 
                 var view = controller.Index();
 
@@ -97,7 +133,7 @@ namespace LibraryTests.LibraryTest.Controllers
 
                 controller.Create(patron);
 
-                var retrieved = repo.GetAll().First();
+                var retrieved = patronRepo.GetAll().First();
                 Assert.That(retrieved.Name, Is.EqualTo("Venkat"));
             }
 
@@ -116,7 +152,7 @@ namespace LibraryTests.LibraryTest.Controllers
 
                 controller.Create(new Patron());
 
-                Assert.False(repo.GetAll().Any());
+                Assert.False(patronRepo.GetAll().Any());
             }
         }
     }

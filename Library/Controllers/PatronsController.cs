@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Collections.Generic;
 using System.Web.Mvc;
 using Library.Models;
 using Library.Models.Repositories;
@@ -8,22 +7,25 @@ namespace Library.Controllers
 {
     public class PatronsController : Controller
     {
-        IRepository<Patron> repository;
+        IRepository<Patron> patronRepo;
+        IRepository<Holding> holdingRepo;
 
         public PatronsController()
         {
-            repository = new EntityRepository<Patron>(db => db.Patrons);
+            patronRepo = new EntityRepository<Patron>(db => db.Patrons);
+            holdingRepo = new EntityRepository<Holding>(db => db.Holdings);
         }
 
-        public PatronsController(IRepository<Patron> repository)
+        public PatronsController(IRepository<Patron> patronRepo, IRepository<Holding> holdingRepo)
         {
-            this.repository = repository;
+            this.patronRepo = patronRepo;
+            this.holdingRepo = holdingRepo;
         }
 
         // GET: Patrons
         public ActionResult Index()
         {
-            return View(repository.GetAll());
+            return View(patronRepo.GetAll());
         }
 
         // GET: Patrons/Create
@@ -41,7 +43,7 @@ namespace Library.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.Create(patron);
+                patronRepo.Create(patron);
                 return RedirectToAction("Index");
             }
             return View(patron);
@@ -52,15 +54,15 @@ namespace Library.Controllers
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var patron = repository.GetByID(id.Value);
+            var patron = patronRepo.GetByID(id.Value);
             if (patron == null)
                 return HttpNotFound();
             return View(patron);
         }
 
-        public ActionResult Holdings(int id)
+        public ActionResult Holdings(int patronId)
         {
-            var holdings = new List<Holding>();
+            var holdings = holdingRepo.FindBy(holding => holding.HeldByPatronId == patronId);
             return View(holdings);
         }
 
@@ -85,7 +87,7 @@ namespace Library.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.Save(patron);
+                patronRepo.Save(patron);
                 return RedirectToAction("Index");
             }
             return View(patron);
@@ -96,14 +98,14 @@ namespace Library.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            repository.Delete(id);
+            patronRepo.Delete(id);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-                repository.Dispose();
+                patronRepo.Dispose();
             base.Dispose(disposing);
         }
     }
