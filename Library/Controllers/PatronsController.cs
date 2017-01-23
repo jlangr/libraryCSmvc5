@@ -83,7 +83,8 @@ namespace Library.Controllers
             if (patron == null)
                 return HttpNotFound();
             var patronView = new PatronViewModel(patron);
-            patronView.Holdings = new List<Holding> { new Models.Holding { Classification = "ABC", CopyNumber = 1 }, new Models.Holding { Classification = "DE", CopyNumber = 2 } };
+            //patronView.Holdings = new List<Holding> { new Models.Holding { Classification = "ABC", CopyNumber = 1 }, new Models.Holding { Classification = "DE", CopyNumber = 2 } };
+            patronView.Holdings = new List<Holding> (holdingRepo.FindBy(holding => holding.HeldByPatronId == id));
             return View(patronView);
             //return Edit(id);
         }

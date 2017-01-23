@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
 
@@ -30,23 +31,28 @@ namespace Library.Models
         }
 
         public int Id { get; set; }
+
         public string Classification { get; set; }
+
+        [Display(Name = "Copy #")]
         public int CopyNumber { get; set; }
-        [NotMapped]
-        public CheckoutPolicy CheckoutPolicy { get; set; }
+
         public DateTime? CheckOutTimestamp { get; set; }
         public DateTime? LastCheckedIn { get; set; }
+
+        [Display(Name = "Date Due")]
         public DateTime? DueDate { get; set; }
+
         public int BranchId { get; set; }
+
         public int HeldByPatronId { get; set; }
 
-        public override string ToString()
-        {
-            return Barcode + "-> branch:" + BranchId;
-        }
-
         [NotMapped]
-        public string Barcode {
+        public CheckoutPolicy CheckoutPolicy { get; set; }
+
+        [NotMapped, Display(Name = "Bar Code")]
+        public string Barcode
+        {
             get { return GenerateBarcode(Classification, CopyNumber); }
         }
 

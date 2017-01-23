@@ -16,14 +16,6 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" }) <br />
         @Html.ValidationMessage("CheckOut", new { @class = "text-danger" } ) <br />
 
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.BranchId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.BranchesViewList, "Id", "Name"));
-            </div>
-        </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.PatronId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

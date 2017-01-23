@@ -20,8 +20,20 @@
         <dd> @Html.DisplayFor(model => model.Balance) </dd>
     </dl>
 
-
     <p>Holdings</p>
+    <table>
+            <tr>
+            <th>@Html.DisplayNameFor(modelItem => Model.Holdings.First().Barcode)</th>
+            <th>@Html.DisplayNameFor(modelItem => Model.Holdings.First().DueDate)</th>
+            </tr>
+        @foreach (var holding in Model.Holdings)
+        {
+            <tr>
+            <td>@Html.DisplayFor(modelItem => holding.Barcode)</td>
+            <td>@Html.DisplayFor(modelItem => holding.DueDate)</td>
+            </tr>
+        }
+    </table>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
