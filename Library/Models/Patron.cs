@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Library.Models
@@ -7,10 +6,7 @@ namespace Library.Models
     [Serializable]
     public class Patron: Identifiable
     {
-        public Patron()
-        {
-            HoldingIds = new List<int>();
-        }
+        public Patron() { }
 
         public Patron(int id, string name)
             : this()
@@ -27,20 +23,6 @@ namespace Library.Models
         public void Fine(decimal amount)
         {
             Balance += amount;
-        }
-
-        public void CheckOut(int id)
-        {
-            HoldingIds.Add(id);
-        }
-
-        // TODO use a set instead?
-        // TODO used at all?
-        public IList<int> HoldingIds { get; set; }
-
-        public void CheckIn(int holdingId)
-        {
-            HoldingIds.Remove(holdingId);
         }
 
         public void Remit(decimal amount)

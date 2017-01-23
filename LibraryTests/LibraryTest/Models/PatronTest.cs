@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
 using Library.Models;
 
@@ -20,29 +18,9 @@ namespace LibraryTest.Models
         }
 
         [Test]
-        public void Create()
+        public void BalanceIsZeroOnCreation()
         {
-            Assert.That(patron.Name, Is.EqualTo(Name));
-            Assert.That(patron.Id, Is.EqualTo(Id));
             Assert.That(patron.Balance, Is.Zero);
-        }
-
-        [Test]
-        public void HoldingIdStoredOnCheckOut()
-        {
-            patron.CheckOut(HoldingId);
-
-            Assert.That(patron.HoldingIds, Is.EqualTo(new List<int> { HoldingId }));
-        }
-
-        [Test]
-        public void CheckIn()
-        {
-            patron.CheckOut(HoldingId);
-
-            patron.CheckIn(HoldingId);
-
-            Assert.That(patron.HoldingIds.Any(), Is.False);
         }
 
         [Test]
