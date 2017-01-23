@@ -55,6 +55,9 @@ namespace LibraryTests.LibraryTest.Controllers
             }
         }
 
+
+        // TODO update view to show patron holdings somehow. New page when you click on a patron?
+
         public class Holdings: PatronsControllerTest
         {
             IRepository<Branch> branchRepo = new InMemoryRepository<Branch>();

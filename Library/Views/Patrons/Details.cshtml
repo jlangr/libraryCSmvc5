@@ -1,4 +1,4 @@
-﻿@model Library.Models.Patron
+﻿@model Library.Models.PatronViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -18,8 +18,10 @@
 
         <dt> @Html.DisplayNameFor(model => model.Balance) </dt>
         <dd> @Html.DisplayFor(model => model.Balance) </dd>
-
     </dl>
+
+
+    <p>Holdings</p>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |

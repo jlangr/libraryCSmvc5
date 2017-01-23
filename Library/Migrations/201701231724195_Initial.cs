@@ -28,7 +28,6 @@ namespace Library.Migrations
                         DueDate = c.DateTime(),
                         BranchId = c.Int(nullable: false),
                         HeldByPatronId = c.Int(nullable: false),
-                        Discriminator = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id);
             

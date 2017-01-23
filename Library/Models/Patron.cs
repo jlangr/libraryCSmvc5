@@ -35,6 +35,7 @@ namespace Library.Models
         }
 
         // TODO use a set instead?
+        // TODO used at all?
         public IList<int> HoldingIds { get; set; }
 
         public void CheckIn(int holdingId)

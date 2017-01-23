@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
 {
+    [NotMapped]
     public class HoldingViewModel: Holding
     {
         public HoldingViewModel() { }
