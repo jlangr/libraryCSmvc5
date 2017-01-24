@@ -3,17 +3,18 @@ using System.Web.Mvc;
 using Library.Models;
 using Library.Models.Repositories;
 using System.Collections.Generic;
+using System;
 
 namespace Library.Controllers
 {
     public class HoldingsController : Controller
     {
-        IRepository<Holding> repository;
+        IRepository<Holding> holdingRepo;
         IRepository<Branch> branchRepo;
 
         public HoldingsController()
         {
-            repository = new EntityRepository<Holding>(db => db.Holdings);
+            holdingRepo = new EntityRepository<Holding>(db => db.Holdings);
             branchRepo = new EntityRepository<Branch>(db => db.Branches);
         }
 
@@ -22,7 +23,7 @@ namespace Library.Controllers
         public ActionResult Index()
         {
             var model = new List<HoldingViewModel>();
-            foreach (var holding in repository.GetAll())
+            foreach (var holding in holdingRepo.GetAll())
                 model.Add(new HoldingViewModel(holding) { BranchName = BranchName(holding.BranchId) });
             return View(model);
         }
@@ -41,12 +42,22 @@ namespace Library.Controllers
             return Edit(id);
         }
 
+        [HttpGet]
+        public JsonResult Find(string classification, int copyNumber)
+        {
+            var barcode = Holding.GenerateBarcode(classification, copyNumber);
+            var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode);
+            if (holding == null)
+                return Json(HttpNotFound());
+            return Json(holding, JsonRequestBehavior.AllowGet);
+        }
+
         // GET: Holdings/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var holding = repository.GetByID(id.Value);
+            var holding = holdingRepo.GetByID(id.Value);
             if (holding == null)
                 return HttpNotFound();
             return ViewWithBranches(holding);
@@ -70,7 +81,7 @@ namespace Library.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.Create(holding);
+                holdingRepo.Create(holding);
                 return RedirectToAction("Index");
             }
             return View(holding);
@@ -85,7 +96,7 @@ namespace Library.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.Save(holding);
+                holdingRepo.Save(holding);
                 return RedirectToAction("Index");
             }
             return View(holding);
@@ -102,14 +113,14 @@ namespace Library.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            repository.Delete(id);
+            holdingRepo.Delete(id);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-                repository.Dispose();
+                holdingRepo.Dispose();
             base.Dispose(disposing);
         }
     }

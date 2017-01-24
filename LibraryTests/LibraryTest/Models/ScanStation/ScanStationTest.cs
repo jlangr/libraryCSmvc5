@@ -3,218 +3,228 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Library.Util;
 using Library.Models;
+using Library.Models.ScanStation;
 
 // TODO wrong place?
 namespace LibraryTest.Models
 {
-    //[TestFixture]
-    //public class ScanStationTest
-    //{
-    //    const int Branch1Id = 1;
-    //    const int Branch2Id = 2;
-    //    public const string Isbn1 = "ABC";
-    //    public const string Isbn2 = "DEF";
-    //    public const string Classification1 = "QA123";
-    //    public const string Classification2 = "PS987";
-    //    public DateTime CheckoutTime = DateTime.Now;
+    [TestFixture]
+    public class ScanStationTest
+    {
 
-    //    readonly string barcode1 = Holding.GenerateBarcode(Classification1, 1);
-    //    readonly string barcode2 = Holding.GenerateBarcode(Classification2, 1);
+        [Test]
+        public void x()
+        {
+            var scanner = new ScanStation(0, null);
+            scanner.AcceptBarcode("AA123:2");
 
-    //    private int patronId1;
-    //    private int patronId2;
+        }
+        //    const int Branch1Id = 1;
+        //    const int Branch2Id = 2;
+        //    public const string Isbn1 = "ABC";
+        //    public const string Isbn2 = "DEF";
+        //    public const string Classification1 = "QA123";
+        //    public const string Classification2 = "PS987";
+        //    public DateTime CheckoutTime = DateTime.Now;
 
-    //    private IClassificationService classificationService;
-    //    private ScanStation scanner;
-    //    private HoldingService holdingService;
-    //    private PatronService patronService;
+        //    readonly string barcode1 = Holding.GenerateBarcode(Classification1, 1);
+        //    readonly string barcode2 = Holding.GenerateBarcode(Classification2, 1);
 
-    //    [SetUp]
-    //    public void Initialize()
-    //    {
-    //        classificationService = new StubClassificationService();
-    //        classificationService.AddBook(Classification1, "T1", "A1", "2001");
-    //        classificationService.AddBook(Classification2, "T2", "A2", "2002");
+        //    private int patronId1;
+        //    private int patronId2;
 
-    //        scanner = new ScanStation(Branch1Id, classificationService);
+        //    private IClassificationService classificationService;
+        //    private ScanStation scanner;
+        //    private HoldingService holdingService;
+        //    private PatronService patronService;
 
-    //        holdingService = new HoldingService();
-    //        holdingService.DeleteAllHoldings();
+        //    [SetUp]
+        //    public void Initialize()
+        //    {
+        //        classificationService = new StubClassificationService();
+        //        classificationService.AddBook(Classification1, "T1", "A1", "2001");
+        //        classificationService.AddBook(Classification2, "T2", "A2", "2002");
 
-    //        patronService = new PatronService();
-    //        PatronService.DeleteAllPatrons();
+        //        scanner = new ScanStation(Branch1Id, classificationService);
 
-    //        patronId1 = patronService.Add("Joe");
-    //        patronId2 = patronService.Add("Jane");
+        //        holdingService = new HoldingService();
+        //        holdingService.DeleteAllHoldings();
 
-    //        var holding = scanner.AddNewMaterial(Isbn1);
-    //        Assert.That(holding.Barcode, Is.EqualTo(barcode1));
-    //    }
+        //        patronService = new PatronService();
+        //        PatronService.DeleteAllPatrons();
 
-    //    [Test]
-    //    public void AddNewBook()
-    //    {
-    //        var holding = new HoldingService().Retrieve(barcode1);
+        //        patronId1 = patronService.Add("Joe");
+        //        patronId2 = patronService.Add("Jane");
 
-    //        Assert.That(holding.Barcode, Is.EqualTo("QA123:1"));
-    //        Assert.That(holding.BranchId, Is.EqualTo(Branch1Id));
-    //    }
+        //        var holding = scanner.AddNewMaterial(Isbn1);
+        //        Assert.That(holding.Barcode, Is.EqualTo(barcode1));
+        //    }
 
-    //    [Test]
-    //    public void AddSecondNewBookWithSameIsbn()
-    //    {
-    //        var holding = scanner.AddNewMaterial(Isbn1);
-    //        Assert.That(holding.Barcode, Is.EqualTo(Classification1 + ":2"));
-    //    }
+        //    [Test]
+        //    public void AddNewBook()
+        //    {
+        //        var holding = new HoldingService().Retrieve(barcode1);
 
-    //    [Test]
-    //    public void CheckOutBook()
-    //    {
-    //        scanner.AddNewMaterial(Isbn1);
+        //        Assert.That(holding.Barcode, Is.EqualTo("QA123:1"));
+        //        Assert.That(holding.BranchId, Is.EqualTo(Branch1Id));
+        //    }
 
-    //        TimeService.NextTime = CheckoutTime;
-    //        scanner.AcceptLibraryCard(patronId1);
-    //        scanner.AcceptBarcode(barcode1);
-    //        scanner.CompleteCheckout();
+        //    [Test]
+        //    public void AddSecondNewBookWithSameIsbn()
+        //    {
+        //        var holding = scanner.AddNewMaterial(Isbn1);
+        //        Assert.That(holding.Barcode, Is.EqualTo(Classification1 + ":2"));
+        //    }
 
-    //        var holding = holdingService.Retrieve(barcode1);
-    //        Assert.That(holding.HeldByPatronId, Is.EqualTo(patronId1));
-    //        Assert.That(holding.CheckOutTimestamp, Is.EqualTo(CheckoutTime));
+        //    [Test]
+        //    public void CheckOutBook()
+        //    {
+        //        scanner.AddNewMaterial(Isbn1);
 
-    //        var patron = new PatronService().Retrieve(patronId1);
-    //        Assert.That(patron.Holdings, Is.EqualTo(new List<string> { barcode1 }));
-    //    }
+        //        TimeService.NextTime = CheckoutTime;
+        //        scanner.AcceptLibraryCard(patronId1);
+        //        scanner.AcceptBarcode(barcode1);
+        //        scanner.CompleteCheckout();
 
-    //    private void SetTimeServiceToLateByDays(string classification, int days)
-    //    {
-    //        var policy = RetrievePolicy(classification);
-    //        TimeService.NextTime = CheckoutTime.AddDays(policy.MaximumCheckoutDays() + days);
-    //    }
+        //        var holding = holdingService.Retrieve(barcode1);
+        //        Assert.That(holding.HeldByPatronId, Is.EqualTo(patronId1));
+        //        Assert.That(holding.CheckOutTimestamp, Is.EqualTo(CheckoutTime));
 
-    //    private CheckoutPolicy RetrievePolicy(string classification)
-    //    {
-    //        var material = classificationService.Retrieve(classification);
-    //        return material.CheckoutPolicy;
-    //    }
+        //        var patron = new PatronService().Retrieve(patronId1);
+        //        Assert.That(patron.Holdings, Is.EqualTo(new List<string> { barcode1 }));
+        //    }
 
-    //    [Test]
-    //    public void CheckInBook()
-    //    {
-    //        CheckOut(barcode1);
-    //        scanner.AcceptBarcode(barcode1);
+        //    private void SetTimeServiceToLateByDays(string classification, int days)
+        //    {
+        //        var policy = RetrievePolicy(classification);
+        //        TimeService.NextTime = CheckoutTime.AddDays(policy.MaximumCheckoutDays() + days);
+        //    }
 
-    //        var holding = holdingService.Retrieve(barcode1);
-    //        Assert.That(holding.HeldByPatronId, Is.EqualTo(Holding.NoPatron));
-    //        Assert.That(holding.IsCheckedOut, Is.False);
+        //    private CheckoutPolicy RetrievePolicy(string classification)
+        //    {
+        //        var material = classificationService.Retrieve(classification);
+        //        return material.CheckoutPolicy;
+        //    }
 
-    //        var patron = new PatronService().Retrieve(patronId1);
-    //        Assert.That(patron.Holdings.Count, Is.EqualTo(0));
-    //    }
+        //    [Test]
+        //    public void CheckInBook()
+        //    {
+        //        CheckOut(barcode1);
+        //        scanner.AcceptBarcode(barcode1);
 
-    //    [Test]
-    //    public void TransfersAreCheckinsToDifferentBranch()
-    //    {
-    //        CheckOut(barcode1);
+        //        var holding = holdingService.Retrieve(barcode1);
+        //        Assert.That(holding.HeldByPatronId, Is.EqualTo(Holding.NoPatron));
+        //        Assert.That(holding.IsCheckedOut, Is.False);
 
-    //        var scannerBranch2 = new ScanStation(Branch2Id, classificationService);
-    //        scannerBranch2.AcceptBarcode(barcode1);
+        //        var patron = new PatronService().Retrieve(patronId1);
+        //        Assert.That(patron.Holdings.Count, Is.EqualTo(0));
+        //    }
 
-    //        var holding = holdingService.Retrieve(barcode1);
-    //        Assert.That(holding.IsCheckedOut, Is.False);
-    //        Assert.That(holding.BranchId, Is.EqualTo(Branch2Id));
-    //    }
+        //    [Test]
+        //    public void TransfersAreCheckinsToDifferentBranch()
+        //    {
+        //        CheckOut(barcode1);
 
-    //    [Test]
-    //    public void CheckInBookLate()
-    //    {
-    //        CheckOut(barcode1);
+        //        var scannerBranch2 = new ScanStation(Branch2Id, classificationService);
+        //        scannerBranch2.AcceptBarcode(barcode1);
 
-    //        const int daysLate = 2;
-    //        SetTimeServiceToLateByDays(Classification1, daysLate);
-    //        scanner.AcceptBarcode(barcode1);
+        //        var holding = holdingService.Retrieve(barcode1);
+        //        Assert.That(holding.IsCheckedOut, Is.False);
+        //        Assert.That(holding.BranchId, Is.EqualTo(Branch2Id));
+        //    }
 
-    //        var patron = new PatronService().Retrieve(patronId1);
-    //        Assert.That(patron.Balance, Is.EqualTo(RetrievePolicy(Classification1).FineAmount(daysLate)));
-    //    }
+        //    [Test]
+        //    public void CheckInBookLate()
+        //    {
+        //        CheckOut(barcode1);
 
-    //    [Test]
-    //    public void CannotCheckOutCheckedInBookWithoutPatronScan()
-    //    {
-    //        Assert.IsFalse(holdingService.IsCheckedOut(barcode1));
+        //        const int daysLate = 2;
+        //        SetTimeServiceToLateByDays(Classification1, daysLate);
+        //        scanner.AcceptBarcode(barcode1);
 
-    //        Assert.Throws<CheckoutException>(()=>scanner.AcceptBarcode(barcode1));
-    //    }
+        //        var patron = new PatronService().Retrieve(patronId1);
+        //        Assert.That(patron.Balance, Is.EqualTo(RetrievePolicy(Classification1).FineAmount(daysLate)));
+        //    }
 
-    //    [Test]
-    //    public void IgnoreWhenSamePatronRescansAlreadyCheckedOutBook()
-    //    {
-    //        scanner.AcceptLibraryCard(patronId1);
-    //        scanner.AcceptBarcode(barcode1);
-    //        scanner.AcceptBarcode(barcode1);
-    //        scanner.CompleteCheckout();
+        //    [Test]
+        //    public void CannotCheckOutCheckedInBookWithoutPatronScan()
+        //    {
+        //        Assert.IsFalse(holdingService.IsCheckedOut(barcode1));
 
-    //        AssertHeldBy(barcode1, patronId1);
-    //        var patron = patronService.Retrieve(patronId1);
-    //        Assert.That(patron.Holdings, Is.EqualTo(new List<string> { barcode1 }));
-    //    }
+        //        Assert.Throws<CheckoutException>(()=>scanner.AcceptBarcode(barcode1));
+        //    }
 
-    //    private void AssertHeldBy(string barcode, int patronId)
-    //    {
-    //        var holding = holdingService.Retrieve(barcode);
-    //        Assert.That(holding.HeldByPatronId, Is.EqualTo(patronId));
-    //    }
+        //    [Test]
+        //    public void IgnoreWhenSamePatronRescansAlreadyCheckedOutBook()
+        //    {
+        //        scanner.AcceptLibraryCard(patronId1);
+        //        scanner.AcceptBarcode(barcode1);
+        //        scanner.AcceptBarcode(barcode1);
+        //        scanner.CompleteCheckout();
 
-    //    [Test]
-    //    public void PatronChecksOutTwoBooks()
-    //    {
-    //        scanner.AddNewMaterial(Isbn2);
+        //        AssertHeldBy(barcode1, patronId1);
+        //        var patron = patronService.Retrieve(patronId1);
+        //        Assert.That(patron.Holdings, Is.EqualTo(new List<string> { barcode1 }));
+        //    }
 
-    //        scanner.AcceptLibraryCard(patronId1);
+        //    private void AssertHeldBy(string barcode, int patronId)
+        //    {
+        //        var holding = holdingService.Retrieve(barcode);
+        //        Assert.That(holding.HeldByPatronId, Is.EqualTo(patronId));
+        //    }
 
-    //        scanner.AcceptBarcode(barcode1);
-    //        scanner.AcceptBarcode(barcode2);
+        //    [Test]
+        //    public void PatronChecksOutTwoBooks()
+        //    {
+        //        scanner.AddNewMaterial(Isbn2);
 
-    //        scanner.CompleteCheckout();
+        //        scanner.AcceptLibraryCard(patronId1);
 
-    //        AssertHeldBy(barcode1, patronId1);
-    //        AssertHeldBy(barcode2, patronId1);
-    //    }
+        //        scanner.AcceptBarcode(barcode1);
+        //        scanner.AcceptBarcode(barcode2);
 
-    //    [Test]
-    //    public void TwoPatronsDifferentCopySameBook()
-    //    {
-    //        scanner.AddNewMaterial(Isbn1);
+        //        scanner.CompleteCheckout();
 
-    //        scanner.AcceptLibraryCard(patronId1);
-    //        scanner.AcceptBarcode(barcode1);
-    //        scanner.CompleteCheckout();
+        //        AssertHeldBy(barcode1, patronId1);
+        //        AssertHeldBy(barcode2, patronId1);
+        //    }
 
-    //        scanner.AcceptLibraryCard(patronId2);
-    //        string barcode1Copy2 = Holding.GenerateBarcode(Classification1, 2);
-    //        scanner.AcceptBarcode(barcode1Copy2);
-    //        scanner.CompleteCheckout();
+        //    [Test]
+        //    public void TwoPatronsDifferentCopySameBook()
+        //    {
+        //        scanner.AddNewMaterial(Isbn1);
 
-    //        AssertHeldBy(barcode1Copy2, patronId2);
-    //    }
+        //        scanner.AcceptLibraryCard(patronId1);
+        //        scanner.AcceptBarcode(barcode1);
+        //        scanner.CompleteCheckout();
 
-    //    private void CheckOut(string barcode)
-    //    {
-    //        TimeService.NextTime = CheckoutTime;
-    //        scanner.AcceptLibraryCard(patronId1);
-    //        scanner.AcceptBarcode(barcode);
-    //        scanner.CompleteCheckout();
-    //    }
-    //}
+        //        scanner.AcceptLibraryCard(patronId2);
+        //        string barcode1Copy2 = Holding.GenerateBarcode(Classification1, 2);
+        //        scanner.AcceptBarcode(barcode1Copy2);
+        //        scanner.CompleteCheckout();
 
-    //class StubClassificationService : MasterClassificationService
-    //{
-    //    public override string Classification(string isbn)
-    //    {
-    //        if (isbn == ScanStationTest.Isbn1)
-    //            return ScanStationTest.Classification1;
-    //        if (isbn == ScanStationTest.Isbn2)
-    //            return ScanStationTest.Classification2;
-    //        return "";
-    //    }
-    //}
+        //        AssertHeldBy(barcode1Copy2, patronId2);
+        //    }
+
+        //    private void CheckOut(string barcode)
+        //    {
+        //        TimeService.NextTime = CheckoutTime;
+        //        scanner.AcceptLibraryCard(patronId1);
+        //        scanner.AcceptBarcode(barcode);
+        //        scanner.CompleteCheckout();
+        //    }
+        //}
+
+        //class StubClassificationService : MasterClassificationService
+        //{
+        //    public override string Classification(string isbn)
+        //    {
+        //        if (isbn == ScanStationTest.Isbn1)
+        //            return ScanStationTest.Classification1;
+        //        if (isbn == ScanStationTest.Isbn2)
+        //            return ScanStationTest.Classification2;
+        //        return "";
+        //    }
+        //}
+    }
 }
