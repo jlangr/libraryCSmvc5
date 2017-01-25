@@ -4,6 +4,9 @@ namespace Library.Models
 {
     public class Material
     {
+        // TODO clean out ctors
+        public Material() { }
+
         public Material(string classification, string title, string author, string year)
             : this(classification, title, author, year, CheckoutPolicies.BookCheckoutPolicy)
         {

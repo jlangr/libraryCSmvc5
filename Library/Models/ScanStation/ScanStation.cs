@@ -1,16 +1,11 @@
 using System;
 using Library.Util;
 using Library.Models.Repositories;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
-using System.Web;
 
 namespace Library.Models.ScanStation
 {
     public class ScanStation
     {
-        static HttpClient client = new HttpClient(); // Should only be instantiated once!
         const int NoPatron = -1;
         private readonly IClassificationService classificationService;
         private readonly HoldingService holdingService = new HoldingService();
@@ -25,7 +20,6 @@ namespace Library.Models.ScanStation
             this.classificationService = classificationService;
             this.holdingRepo = holdingRepo;
             this.patronRepo = patronRepo;
-            client.BaseAddress = new Uri("http://localhost:50662");
             BranchId = branchId;
             brId = BranchId;
         }
@@ -53,7 +47,6 @@ namespace Library.Models.ScanStation
         {
             var cl = Holding.ClassificationFromBarcode(bc);
             var cn = Holding.CopyNumberFromBarcode(bc);
-            Console.WriteLine("FIND: " + bc);
             var h = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, bc);
 
             if (h.IsCheckedOut)

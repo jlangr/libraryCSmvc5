@@ -5,6 +5,7 @@ using Library.Util;
 using Library.Models;
 using Library.Models.ScanStation;
 using Library.Models.Repositories;
+using Moq;
 
 // TODO wrong place?
 namespace LibraryTest.Models
@@ -34,13 +35,8 @@ namespace LibraryTest.Models
         [SetUp]
         public void Initialize()
         {
-            classificationService = new StubClassificationService();
-            classificationService.AddBook(Classification1, "T1", "A1", "2001");
-            classificationService.AddBook(Classification2, "T2", "A2", "2002");
-
             holdingRepo = new InMemoryRepository<Holding>();
             patronRepo = new InMemoryRepository<Patron>();
-            scanner = new ScanStation(Branch1Id, classificationService, holdingRepo, patronRepo);
 
             patronId1 = patronRepo.Create(new Patron { Name = "Anand" });
         }
@@ -56,6 +52,11 @@ namespace LibraryTest.Models
         [Test]
         public void AddNewMaterialStoresHoldingWithAssociatedBarcode()
         {
+            var classificationService = new Mock<IClassificationService>();
+            classificationService.Setup(service => service.Classification(Isbn1))
+                .Returns(Classification1);
+            scanner = new ScanStation(Branch1Id, classificationService.Object, holdingRepo, patronRepo);
+
             scanner.AddNewMaterial(Isbn1);
 
             var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode1);
@@ -74,6 +75,11 @@ namespace LibraryTest.Models
         [Test]
         public void CheckOutBook()
         {
+            var classificationService = new Mock<IClassificationService>();
+            classificationService.Setup(service => service.Classification(Isbn1))
+                .Returns(Classification1);
+            scanner = new ScanStation(Branch1Id, classificationService.Object, holdingRepo, patronRepo);
+
             scanner.AddNewMaterial(Isbn1);
             TimeService.NextTime = CheckoutTime;
             scanner.AcceptLibraryCard(patronId1);
@@ -109,8 +115,16 @@ namespace LibraryTest.Models
         [Test]
         public void CheckInBook()
         {
+            var classificationService = new Mock<IClassificationService>();
+            classificationService.Setup(service => service.Classification(Isbn1))
+                .Returns(Classification1);
+            scanner = new ScanStation(Branch1Id, classificationService.Object, holdingRepo, patronRepo);
+
             scanner.AddNewMaterial(Isbn1);
             CheckOut(barcode1);
+
+            classificationService.Setup(service => service.Retrieve(Classification1))
+                .Returns(new Material() { CheckoutPolicy = new BookCheckoutPolicy() });
 
             scanner.AcceptBarcode(barcode1);
 
@@ -119,18 +133,29 @@ namespace LibraryTest.Models
             Assert.That(holding.IsCheckedOut, Is.False);
         }
 
-        //    [Test]
-        //    public void TransfersAreCheckinsToDifferentBranch()
-        //    {
-        //        CheckOut(barcode1);
+        [Test]
+        public void TransfersAreCheckinsToDifferentBranch()
+        {
+            var classificationService = new Mock<IClassificationService>();
+            classificationService.Setup(service => service.Classification(Isbn1))
+                .Returns(Classification1);
+            scanner = new ScanStation(Branch1Id, classificationService.Object, holdingRepo, patronRepo);
 
-        //        var scannerBranch2 = new ScanStation(Branch2Id, classificationService);
-        //        scannerBranch2.AcceptBarcode(barcode1);
+            scanner.AddNewMaterial(Isbn1);
+            CheckOut(barcode1);
 
-        //        var holding = holdingService.Retrieve(barcode1);
-        //        Assert.That(holding.IsCheckedOut, Is.False);
-        //        Assert.That(holding.BranchId, Is.EqualTo(Branch2Id));
-        //    }
+            var scannerBranch2 = new ScanStation(Branch2Id, classificationService.Object, holdingRepo, patronRepo);
+
+            // for checkin
+            classificationService.Setup(service => service.Retrieve(Classification1))
+                .Returns(new Material() { CheckoutPolicy = new BookCheckoutPolicy() });
+
+            scannerBranch2.AcceptBarcode(barcode1);
+
+            var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode1);
+            Assert.That(holding.IsCheckedOut, Is.False);
+            Assert.That(holding.BranchId, Is.EqualTo(Branch2Id));
+        }
 
         //    [Test]
         //    public void CheckInBookLate()
@@ -206,15 +231,5 @@ namespace LibraryTest.Models
         //    }
 
         //}
-
-        class StubClassificationService : MasterClassificationService
-        {
-            public override string Classification(string isbn)
-            {
-                if (isbn == ScanStationTest.Isbn1) return ScanStationTest.Classification1;
-                if (isbn == ScanStationTest.Isbn2) return ScanStationTest.Classification2;
-                return "";
-            }
-        }
     }
 }
