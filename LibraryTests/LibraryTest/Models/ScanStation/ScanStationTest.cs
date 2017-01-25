@@ -1,10 +1,12 @@
 using System;
+using System.Linq;
 using NUnit.Framework;
 using Library.Util;
 using Library.Models;
 using Library.Models.ScanStation;
 using Library.Models.Repositories;
 using Moq;
+using System.Collections.Generic;
 
 // TODO remove dependency on web mvc stuff from test and prod packages
 
@@ -51,7 +53,7 @@ namespace LibraryTest.Models
             }
         }
 
-        public class AddNewMaterial : ScanStationTest
+        public class WhenAddNewMaterial : ScanStationTest
         {
             Mock<IClassificationService> classificationService;
 
@@ -73,12 +75,17 @@ namespace LibraryTest.Models
                 Assert.That(holding.BranchId, Is.EqualTo(scanner.BranchId));
             }
 
-            //    [Test]
-            //    public void AddSecondNewBookWithSameIsbn()
-            //    {
-            //        var holding = scanner.AddNewMaterial(Isbn1);
-            //        Assert.That(holding.Barcode, Is.EqualTo(Classification1 + ":2"));
-            //    }
+            [Test]
+            public void AddSecondNewBookWithSameIsbn()
+            {
+                classificationService.Setup(service => service.Classification("anIsbn")).Returns("AB123");
+                scanner.AddNewMaterial("anIsbn");
+
+                var holding = scanner.AddNewMaterial("anIsbn");
+
+                var holdingBarcodes = holdingRepo.GetAll().Select(h => h.Barcode);
+                Assert.That(holdingBarcodes, Is.EquivalentTo(new List<string> { "AB123:1", "AB123:2" }));
+            }
         }
 
         public class WhenOneBookExists : ScanStationTest
@@ -216,7 +223,7 @@ namespace LibraryTest.Models
                 Assert.That(GetByBarcode(barcode2).HeldByPatronId, Is.EqualTo(patronId1));
             }
 
-            [Test, Ignore("")]
+            [Test]
             public void TwoPatronsDifferentCopySameBook()
             {
                 ScanNewMaterial(barcode1);
@@ -238,7 +245,7 @@ namespace LibraryTest.Models
                 var classification = Holding.ClassificationFromBarcode(barcode);
                 var isbn = "x";
                 classificationService.Setup(service => service.Classification(isbn)).Returns(classification);
-                scanner.AddNewMaterial(isbn); // TODO get to work for 2nd book
+                scanner.AddNewMaterial(isbn);
             }
         }
 

@@ -61,6 +61,17 @@ namespace LibraryTests.LibraryTest.Controllers
         }
 
         [Test]
+        public void CreateUsesHighwaterOnlyForBooksWithSameClassification()
+        {
+            controller.Create(new Holding() { Classification = "AB123", CopyNumber = 1, HeldByPatronId = 1});
+
+            controller.Create(new Holding() { Classification = "XX999", CopyNumber = 0, HeldByPatronId = 2 });
+
+            var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, "XX999:1");
+            Assert.That(holding.HeldByPatronId, Is.EqualTo(2));
+        }
+
+        [Test]
         public void CreateErrorsWhenAddingDuplicateBarcode()
         {
             controller.Create(new Holding() { Classification = "AB123", CopyNumber = 1 });

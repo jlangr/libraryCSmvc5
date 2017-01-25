@@ -90,7 +90,8 @@ namespace Library.Controllers
             {
                 if (holding.CopyNumber == 0)
                 {
-                    holding.CopyNumber = holdingRepo.GetAll().Count() + 1;
+                    var holdingsWithClassification = holdingRepo.FindBy(h => h.Classification == holding.Classification);
+                    holding.CopyNumber = holdingsWithClassification.Count() + 1;
                 }
                 else
                 {
