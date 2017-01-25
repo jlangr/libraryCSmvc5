@@ -7,6 +7,8 @@ using Library.Models.ScanStation;
 using Library.Models.Repositories;
 using Moq;
 
+// TODO remove dependency on web mvc stuff from test and prod packages
+
 // TODO wrong place?
 namespace LibraryTest.Models
 {
@@ -25,7 +27,6 @@ namespace LibraryTest.Models
         readonly string barcode2 = Holding.GenerateBarcode(Classification2, 1);
 
         private int patronId1;
-        private int patronId2;
 
         private ScanStation scanner;
         private IRepository<Holding> holdingRepo;
@@ -51,7 +52,7 @@ namespace LibraryTest.Models
             }
         }
 
-        public class EverythingElse : ScanStationTest
+        public class AddNewMaterial : ScanStationTest
         {
             Mock<IClassificationService> classificationService;
 
@@ -63,7 +64,7 @@ namespace LibraryTest.Models
             }
 
             [Test]
-            public void AddNewMaterialStoresHoldingAtBranch()
+            public void StoresHoldingAtBranch()
             {
                 classificationService.Setup(service => service.Classification("anIsbn")).Returns("AB123");
 
@@ -89,43 +90,37 @@ namespace LibraryTest.Models
             public void CreateScanner()
             {
                 classificationService = new Mock<IClassificationService>();
-                scanner = new ScanStation(Branch1Id, classificationService.Object, holdingRepo, patronRepo);
+                AlwaysReturnBookMaterial(classificationService);
 
+                scanner = new ScanStation(Branch1Id, classificationService.Object, holdingRepo, patronRepo);
             }
 
-            void AddMaterialWithBarcode(string barcode)
+            void AlwaysReturnBookMaterial(Mock<IClassificationService> classificationService)
+            {
+                classificationService.Setup(service => service.Retrieve(Moq.It.IsAny<string>()))
+                    .Returns(new Material() { CheckoutPolicy = new BookCheckoutPolicy() });
+            }
+
+            void ScanNewMaterial(string barcode)
             {
                 var classification = Holding.ClassificationFromBarcode(barcode);
                 classificationService.Setup(service => service.Classification("x")).Returns(classification);
                 scanner.AddNewMaterial("x");
             }
-            
+
             [Test]
             public void CheckOutBook()
             {
-                AddMaterialWithBarcode(barcode1);
+                ScanNewMaterial(barcode1);
                 TimeService.NextTime = CheckoutTime;
                 scanner.AcceptLibraryCard(patronId1);
 
                 scanner.AcceptBarcode(barcode1);
-                scanner.CompleteCheckout();
 
                 var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode1);
                 Assert.That(holding.HeldByPatronId, Is.EqualTo(patronId1));
                 Assert.That(holding.CheckOutTimestamp, Is.EqualTo(CheckoutTime));
             }
-
-            //    private void SetTimeServiceToLateByDays(string classification, int days)
-            //    {
-            //        var policy = RetrievePolicy(classification);
-            //        TimeService.NextTime = CheckoutTime.AddDays(policy.MaximumCheckoutDays() + days);
-            //    }
-
-            //    private CheckoutPolicy RetrievePolicy(string classification)
-            //    {
-            //        var material = classificationService.Retrieve(classification);
-            //        return material.CheckoutPolicy;
-            //    }
 
             private void CheckOut(string barcode)
             {
@@ -138,11 +133,8 @@ namespace LibraryTest.Models
             [Test]
             public void CheckInBook()
             {
-                AddMaterialWithBarcode(barcode1);
+                ScanNewMaterial(barcode1);
                 CheckOut(barcode1);
-
-                classificationService.Setup(service => service.Retrieve(Classification1))
-                    .Returns(new Material() { CheckoutPolicy = new BookCheckoutPolicy() });
 
                 scanner.AcceptBarcode(barcode1);
 
@@ -152,16 +144,11 @@ namespace LibraryTest.Models
             }
 
             [Test]
-            public void TransfersAreCheckinsToDifferentBranch()
+            public void TransferViaCheckinToSecondBranch()
             {
-                AddMaterialWithBarcode(barcode1);
+                ScanNewMaterial(barcode1);
                 CheckOut(barcode1);
-
                 var scannerBranch2 = new ScanStation(Branch2Id, classificationService.Object, holdingRepo, patronRepo);
-
-                // for checkin
-                classificationService.Setup(service => service.Retrieve(Classification1))
-                    .Returns(new Material() { CheckoutPolicy = new BookCheckoutPolicy() });
 
                 scannerBranch2.AcceptBarcode(barcode1);
 
@@ -169,28 +156,41 @@ namespace LibraryTest.Models
                 Assert.That(holding.IsCheckedOut, Is.False);
                 Assert.That(holding.BranchId, Is.EqualTo(Branch2Id));
             }
+
+            [Test]
+            public void CheckInBookLate()
+            {
+                ScanNewMaterial(barcode1);
+                CheckOut(barcode1);
+                const int daysLate = 2;
+                SetTimeServiceToLateByDays(barcode1, daysLate);
+
+                scanner.AcceptBarcode(barcode1);
+
+                var patron = patronRepo.GetByID(patronId1);
+                Assert.That(patron.Balance, Is.EqualTo(RetrievePolicy(barcode1).FineAmount(daysLate)));
+            }
+
+            private void SetTimeServiceToLateByDays(string barcode, int days)
+            {
+                TimeService.NextTime = CheckoutTime.AddDays(RetrievePolicy(barcode).MaximumCheckoutDays() + days);
+            }
+
+            private CheckoutPolicy RetrievePolicy(string barcode)
+            {
+                var classification = Holding.ClassificationFromBarcode(barcode);
+                var material = classificationService.Object.Retrieve(classification);
+                return material.CheckoutPolicy;
+            }
+
+            [Test]
+            public void CannotCheckOutCheckedInBookWithoutPatronScan()
+            {
+                ScanNewMaterial(barcode1);
+
+                Assert.Throws<CheckoutException>(() => scanner.AcceptBarcode(barcode1));
+            }
         }
-
-        //    [Test]
-        //    public void CheckInBookLate()
-        //    {
-        //        CheckOut(barcode1);
-
-        //        const int daysLate = 2;
-        //        SetTimeServiceToLateByDays(Classification1, daysLate);
-        //        scanner.AcceptBarcode(barcode1);
-
-        //        var patron = new PatronService().Retrieve(patronId1);
-        //        Assert.That(patron.Balance, Is.EqualTo(RetrievePolicy(Classification1).FineAmount(daysLate)));
-        //    }
-
-        //    [Test]
-        //    public void CannotCheckOutCheckedInBookWithoutPatronScan()
-        //    {
-        //        Assert.IsFalse(holdingService.IsCheckedOut(barcode1));
-
-        //        Assert.Throws<CheckoutException>(()=>scanner.AcceptBarcode(barcode1));
-        //    }
 
         //    [Test]
         //    public void IgnoreWhenSamePatronRescansAlreadyCheckedOutBook()
