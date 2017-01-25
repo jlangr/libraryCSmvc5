@@ -27,7 +27,6 @@ namespace LibraryTest.Models
         private int patronId1;
         private int patronId2;
 
-        private IClassificationService classificationService;
         private ScanStation scanner;
         private IRepository<Holding> holdingRepo;
         private IRepository<Patron> patronRepo;
@@ -41,120 +40,135 @@ namespace LibraryTest.Models
             patronId1 = patronRepo.Create(new Patron { Name = "Anand" });
         }
 
-        [Test]
-        public void ScannerCreation()
+        class WhenScannerIsCreated : ScanStationTest
         {
-            scanner = new ScanStation(1, null, null, null);
+            [Test]
+            public void BranchIdIsSetFromCtor()
+            {
+                scanner = new ScanStation(1);
 
-            Assert.That(scanner.BranchId, Is.EqualTo(1));
+                Assert.That(scanner.BranchId, Is.EqualTo(1));
+            }
         }
 
-        [Test]
-        public void AddNewMaterialStoresHoldingWithAssociatedBarcode()
+        public class EverythingElse : ScanStationTest
         {
-            var classificationService = new Mock<IClassificationService>();
-            classificationService.Setup(service => service.Classification(Isbn1))
-                .Returns(Classification1);
-            scanner = new ScanStation(Branch1Id, classificationService.Object, holdingRepo, patronRepo);
+            Mock<IClassificationService> classificationService;
 
-            scanner.AddNewMaterial(Isbn1);
+            [SetUp]
+            public void CreateScanner()
+            {
+                classificationService = new Mock<IClassificationService>();
+                scanner = new ScanStation(Branch1Id, classificationService.Object, holdingRepo, patronRepo);
+            }
 
-            var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode1);
-            Assert.That(holding.Barcode, Is.EqualTo("QA123:1"));
-            Assert.That(holding.HeldByPatronId, Is.Zero);
-            Assert.That(holding.BranchId, Is.EqualTo(scanner.BranchId));
+            [Test]
+            public void AddNewMaterialStoresHoldingAtBranch()
+            {
+                classificationService.Setup(service => service.Classification("anIsbn")).Returns("AB123");
+
+                scanner.AddNewMaterial("anIsbn");
+
+                var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, "AB123:1");
+                Assert.That(holding.BranchId, Is.EqualTo(scanner.BranchId));
+            }
+
+            //    [Test]
+            //    public void AddSecondNewBookWithSameIsbn()
+            //    {
+            //        var holding = scanner.AddNewMaterial(Isbn1);
+            //        Assert.That(holding.Barcode, Is.EqualTo(Classification1 + ":2"));
+            //    }
         }
 
-        //    [Test]
-        //    public void AddSecondNewBookWithSameIsbn()
-        //    {
-        //        var holding = scanner.AddNewMaterial(Isbn1);
-        //        Assert.That(holding.Barcode, Is.EqualTo(Classification1 + ":2"));
-        //    }
-
-        [Test]
-        public void CheckOutBook()
+        public class WhenOneBookExists : ScanStationTest
         {
-            var classificationService = new Mock<IClassificationService>();
-            classificationService.Setup(service => service.Classification(Isbn1))
-                .Returns(Classification1);
-            scanner = new ScanStation(Branch1Id, classificationService.Object, holdingRepo, patronRepo);
+            Mock<IClassificationService> classificationService;
 
-            scanner.AddNewMaterial(Isbn1);
-            TimeService.NextTime = CheckoutTime;
-            scanner.AcceptLibraryCard(patronId1);
+            [SetUp] // DUP
+            public void CreateScanner()
+            {
+                classificationService = new Mock<IClassificationService>();
+                scanner = new ScanStation(Branch1Id, classificationService.Object, holdingRepo, patronRepo);
 
-            scanner.AcceptBarcode(barcode1);
-            scanner.CompleteCheckout();
+            }
 
-            var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode1);
-            Assert.That(holding.HeldByPatronId, Is.EqualTo(patronId1));
-            Assert.That(holding.CheckOutTimestamp, Is.EqualTo(CheckoutTime));
-        }
+            void AddMaterialWithBarcode(string barcode)
+            {
+                var classification = Holding.ClassificationFromBarcode(barcode);
+                classificationService.Setup(service => service.Classification("x")).Returns(classification);
+                scanner.AddNewMaterial("x");
+            }
+            
+            [Test]
+            public void CheckOutBook()
+            {
+                AddMaterialWithBarcode(barcode1);
+                TimeService.NextTime = CheckoutTime;
+                scanner.AcceptLibraryCard(patronId1);
 
-        //    private void SetTimeServiceToLateByDays(string classification, int days)
-        //    {
-        //        var policy = RetrievePolicy(classification);
-        //        TimeService.NextTime = CheckoutTime.AddDays(policy.MaximumCheckoutDays() + days);
-        //    }
+                scanner.AcceptBarcode(barcode1);
+                scanner.CompleteCheckout();
 
-        //    private CheckoutPolicy RetrievePolicy(string classification)
-        //    {
-        //        var material = classificationService.Retrieve(classification);
-        //        return material.CheckoutPolicy;
-        //    }
+                var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode1);
+                Assert.That(holding.HeldByPatronId, Is.EqualTo(patronId1));
+                Assert.That(holding.CheckOutTimestamp, Is.EqualTo(CheckoutTime));
+            }
 
-        private void CheckOut(string barcode)
-        {
-            TimeService.NextTime = CheckoutTime;
-            scanner.AcceptLibraryCard(patronId1);
-            scanner.AcceptBarcode(barcode);
-            scanner.CompleteCheckout();
-        }
+            //    private void SetTimeServiceToLateByDays(string classification, int days)
+            //    {
+            //        var policy = RetrievePolicy(classification);
+            //        TimeService.NextTime = CheckoutTime.AddDays(policy.MaximumCheckoutDays() + days);
+            //    }
 
-        [Test]
-        public void CheckInBook()
-        {
-            var classificationService = new Mock<IClassificationService>();
-            classificationService.Setup(service => service.Classification(Isbn1))
-                .Returns(Classification1);
-            scanner = new ScanStation(Branch1Id, classificationService.Object, holdingRepo, patronRepo);
+            //    private CheckoutPolicy RetrievePolicy(string classification)
+            //    {
+            //        var material = classificationService.Retrieve(classification);
+            //        return material.CheckoutPolicy;
+            //    }
 
-            scanner.AddNewMaterial(Isbn1);
-            CheckOut(barcode1);
+            private void CheckOut(string barcode)
+            {
+                TimeService.NextTime = CheckoutTime;
+                scanner.AcceptLibraryCard(patronId1);
+                scanner.AcceptBarcode(barcode);
+                scanner.CompleteCheckout();
+            }
 
-            classificationService.Setup(service => service.Retrieve(Classification1))
-                .Returns(new Material() { CheckoutPolicy = new BookCheckoutPolicy() });
+            [Test]
+            public void CheckInBook()
+            {
+                AddMaterialWithBarcode(barcode1);
+                CheckOut(barcode1);
 
-            scanner.AcceptBarcode(barcode1);
+                classificationService.Setup(service => service.Retrieve(Classification1))
+                    .Returns(new Material() { CheckoutPolicy = new BookCheckoutPolicy() });
 
-            var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode1);
-            Assert.That(holding.HeldByPatronId, Is.EqualTo(Holding.NoPatron));
-            Assert.That(holding.IsCheckedOut, Is.False);
-        }
+                scanner.AcceptBarcode(barcode1);
 
-        [Test]
-        public void TransfersAreCheckinsToDifferentBranch()
-        {
-            var classificationService = new Mock<IClassificationService>();
-            classificationService.Setup(service => service.Classification(Isbn1))
-                .Returns(Classification1);
-            scanner = new ScanStation(Branch1Id, classificationService.Object, holdingRepo, patronRepo);
+                var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode1);
+                Assert.That(holding.HeldByPatronId, Is.EqualTo(Holding.NoPatron));
+                Assert.That(holding.IsCheckedOut, Is.False);
+            }
 
-            scanner.AddNewMaterial(Isbn1);
-            CheckOut(barcode1);
+            [Test]
+            public void TransfersAreCheckinsToDifferentBranch()
+            {
+                AddMaterialWithBarcode(barcode1);
+                CheckOut(barcode1);
 
-            var scannerBranch2 = new ScanStation(Branch2Id, classificationService.Object, holdingRepo, patronRepo);
+                var scannerBranch2 = new ScanStation(Branch2Id, classificationService.Object, holdingRepo, patronRepo);
 
-            // for checkin
-            classificationService.Setup(service => service.Retrieve(Classification1))
-                .Returns(new Material() { CheckoutPolicy = new BookCheckoutPolicy() });
+                // for checkin
+                classificationService.Setup(service => service.Retrieve(Classification1))
+                    .Returns(new Material() { CheckoutPolicy = new BookCheckoutPolicy() });
 
-            scannerBranch2.AcceptBarcode(barcode1);
+                scannerBranch2.AcceptBarcode(barcode1);
 
-            var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode1);
-            Assert.That(holding.IsCheckedOut, Is.False);
-            Assert.That(holding.BranchId, Is.EqualTo(Branch2Id));
+                var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode1);
+                Assert.That(holding.IsCheckedOut, Is.False);
+                Assert.That(holding.BranchId, Is.EqualTo(Branch2Id));
+            }
         }
 
         //    [Test]

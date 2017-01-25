@@ -15,6 +15,10 @@ namespace Library.Models.ScanStation
         private IRepository<Patron> patronRepo;
         private IRepository<Holding> holdingRepo;
 
+        public ScanStation(int branchId) {
+            BranchId = branchId;
+        }
+
         public ScanStation(int branchId, IClassificationService classificationService, IRepository<Holding> holdingRepo, IRepository<Patron> patronRepo)
         {
             this.classificationService = classificationService;
