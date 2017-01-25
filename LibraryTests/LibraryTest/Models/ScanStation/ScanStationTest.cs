@@ -190,26 +190,20 @@ namespace LibraryTest.Models
 
                 Assert.Throws<CheckoutException>(() => scanner.AcceptBarcode(barcode1));
             }
+
+            [Test]
+            public void IgnoreWhenSamePatronRescansAlreadyCheckedOutBook()
+            {
+                ScanNewMaterial(barcode1);
+                scanner.AcceptLibraryCard(patronId1);
+                scanner.AcceptBarcode(barcode1);
+
+                scanner.AcceptBarcode(barcode1);
+
+                var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode1);
+                Assert.That(holding.HeldByPatronId, Is.EqualTo(patronId1));
+            }
         }
-
-        //    [Test]
-        //    public void IgnoreWhenSamePatronRescansAlreadyCheckedOutBook()
-        //    {
-        //        scanner.AcceptLibraryCard(patronId1);
-        //        scanner.AcceptBarcode(barcode1);
-        //        scanner.AcceptBarcode(barcode1);
-        //        scanner.CompleteCheckout();
-
-        //        AssertHeldBy(barcode1, patronId1);
-        //        var patron = patronService.Retrieve(patronId1);
-        //        Assert.That(patron.Holdings, Is.EqualTo(new List<string> { barcode1 }));
-        //    }
-
-        //    private void AssertHeldBy(string barcode, int patronId)
-        //    {
-        //        var holding = holdingService.Retrieve(barcode);
-        //        Assert.That(holding.HeldByPatronId, Is.EqualTo(patronId));
-        //    }
 
         //    [Test]
         //    public void PatronChecksOutTwoBooks()
