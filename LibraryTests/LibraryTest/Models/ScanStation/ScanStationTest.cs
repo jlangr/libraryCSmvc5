@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using Library.Util;
 using Library.Models;
@@ -21,7 +20,7 @@ namespace LibraryTest.Models
         public const string Isbn2 = "DEF";
         public const string Classification1 = "QA123";
         public const string Classification2 = "PS987";
-        public DateTime CheckoutTime = new DateTime(2018, 1, 15);
+        public DateTime CheckoutTime = DateTime.Now;
 
         readonly string barcode1 = Holding.GenerateBarcode(Classification1, 1);
         readonly string barcode2 = Holding.GenerateBarcode(Classification2, 1);
@@ -99,13 +98,6 @@ namespace LibraryTest.Models
             {
                 classificationService.Setup(service => service.Retrieve(Moq.It.IsAny<string>()))
                     .Returns(new Material() { CheckoutPolicy = new BookCheckoutPolicy() });
-            }
-
-            void ScanNewMaterial(string barcode)
-            {
-                var classification = Holding.ClassificationFromBarcode(barcode);
-                classificationService.Setup(service => service.Classification("x")).Returns(classification);
-                scanner.AddNewMaterial("x");
             }
 
             [Test]
@@ -200,44 +192,55 @@ namespace LibraryTest.Models
 
                 scanner.AcceptBarcode(barcode1);
 
-                var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode1);
-                Assert.That(holding.HeldByPatronId, Is.EqualTo(patronId1));
+                Assert.That(GetByBarcode(barcode1).HeldByPatronId, Is.EqualTo(patronId1));
+            }
+
+            Holding GetByBarcode(string barcode)
+            {
+                return HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode);
+            }
+
+            [Test]
+            public void PatronChecksOutTwoBooks()
+            {
+                ScanNewMaterial(barcode1);
+                ScanNewMaterial(barcode2);
+                scanner.AcceptLibraryCard(patronId1);
+
+                scanner.AcceptBarcode(barcode1);
+                scanner.AcceptBarcode(barcode2);
+
+                scanner.CompleteCheckout();
+
+                Assert.That(GetByBarcode(barcode1).HeldByPatronId, Is.EqualTo(patronId1));
+                Assert.That(GetByBarcode(barcode2).HeldByPatronId, Is.EqualTo(patronId1));
+            }
+
+            [Test, Ignore("")]
+            public void TwoPatronsDifferentCopySameBook()
+            {
+                ScanNewMaterial(barcode1);
+                string barcode1Copy2 = Holding.GenerateBarcode(Holding.ClassificationFromBarcode(barcode1), 2);
+                ScanNewMaterial(barcode1Copy2);
+                scanner.AcceptLibraryCard(patronId1);
+                scanner.AcceptBarcode(barcode1);
+                scanner.CompleteCheckout();
+
+                var patronId2 = patronRepo.Create(new Patron());
+                scanner.AcceptLibraryCard(patronId2);
+                scanner.AcceptBarcode(barcode1Copy2);
+
+                Assert.That(GetByBarcode(barcode1Copy2).HeldByPatronId, Is.EqualTo(patronId2));
+            }
+
+            void ScanNewMaterial(string barcode)
+            {
+                var classification = Holding.ClassificationFromBarcode(barcode);
+                var isbn = "x";
+                classificationService.Setup(service => service.Classification(isbn)).Returns(classification);
+                scanner.AddNewMaterial(isbn); // TODO get to work for 2nd book
             }
         }
 
-        //    [Test]
-        //    public void PatronChecksOutTwoBooks()
-        //    {
-        //        scanner.AddNewMaterial(Isbn2);
-
-        //        scanner.AcceptLibraryCard(patronId1);
-
-        //        scanner.AcceptBarcode(barcode1);
-        //        scanner.AcceptBarcode(barcode2);
-
-        //        scanner.CompleteCheckout();
-
-        //        AssertHeldBy(barcode1, patronId1);
-        //        AssertHeldBy(barcode2, patronId1);
-        //    }
-
-        //    [Test]
-        //    public void TwoPatronsDifferentCopySameBook()
-        //    {
-        //        scanner.AddNewMaterial(Isbn1);
-
-        //        scanner.AcceptLibraryCard(patronId1);
-        //        scanner.AcceptBarcode(barcode1);
-        //        scanner.CompleteCheckout();
-
-        //        scanner.AcceptLibraryCard(patronId2);
-        //        string barcode1Copy2 = Holding.GenerateBarcode(Classification1, 2);
-        //        scanner.AcceptBarcode(barcode1Copy2);
-        //        scanner.CompleteCheckout();
-
-        //        AssertHeldBy(barcode1Copy2, patronId2);
-        //    }
-
-        //}
     }
 }
