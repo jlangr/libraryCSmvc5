@@ -89,6 +89,8 @@ namespace LibraryTest.Models
             Assert.That(holding.Barcode, Is.EqualTo(book1Barcode));
         }
 
+        // TODO need a horked up test file.
+        // Or perhaps keep this one :-)
         [Test]
         public void CkO()
         {

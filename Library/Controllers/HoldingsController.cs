@@ -1,14 +1,15 @@
 ﻿using System.Net;
 using System.Web.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 using Library.Models;
 using Library.Models.Repositories;
-using System.Collections.Generic;
-using System;
 
 namespace Library.Controllers
 {
     public class HoldingsController : Controller
     {
+        public const string ModelKey = "Holdings";
         IRepository<Holding> holdingRepo;
         IRepository<Branch> branchRepo;
 
@@ -16,6 +17,12 @@ namespace Library.Controllers
         {
             holdingRepo = new EntityRepository<Holding>(db => db.Holdings);
             branchRepo = new EntityRepository<Branch>(db => db.Branches);
+        }
+
+        public HoldingsController(IRepository<Holding> holdingRepo, IRepository<Branch> branchRepo)
+        {
+            this.holdingRepo = holdingRepo;
+            this.branchRepo = branchRepo;
         }
 
         // GET: Holdings
@@ -81,8 +88,21 @@ namespace Library.Controllers
         {
             if (ModelState.IsValid)
             {
-                holdingRepo.Create(holding);
-                return RedirectToAction("Index");
+                if (holding.CopyNumber == 0)
+                {
+                    holding.CopyNumber = holdingRepo.GetAll().Count() + 1;
+                }
+                else
+                {
+                    if (HoldingRepositoryExtensions.FindByBarcode(holdingRepo, holding.Barcode) != null)
+                    {
+                        ModelState.AddModelError(ModelKey, "Duplicate classification / copy number combination.");
+                        return View(holding);
+                    }
+                }
+
+                var id = holdingRepo.Create(holding); 
+                return RedirectToAction("Index", new { ID = id });
             }
             return View(holding);
         }

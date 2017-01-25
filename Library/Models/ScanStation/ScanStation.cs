@@ -79,13 +79,14 @@ namespace Library.Models.ScanStation
                         var f = classificationService.Retrieve(h.Classification).CheckoutPolicy.FineAmount(h.CheckOutTimestamp.Value, n.AddDays(21));
                         var patron = patronRepo.GetByID(h.HeldByPatronId);
                         patron.Fine(f);
-                        holdingService.CheckIn(n, bc1, brId);
+                        patronRepo.Save(patron);
+//holdingService.CheckIn(n, bc1, brId);
                         // co
-                        holdingService.CheckOut(cts, bc1, cur, CheckoutPolicies.BookCheckoutPolicy);
+//holdingService.CheckOut(cts, bc1, cur, CheckoutPolicies.BookCheckoutPolicy);
                         // call check out controller(cur, bc1);
                         t.AddDays(1);
                         n = t;
-                        //patronService.CheckIn(patron.Id, bc);
+ //patronService.CheckIn(patron.Id, bc);
                     }
                     else // not checking out book already cked out by other patron
                     {
