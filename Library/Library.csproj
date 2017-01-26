@@ -225,6 +225,13 @@
       <DependentUpon>201701231724195_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Reporting\Endpoint.cs" />
+    <Compile Include="Reporting\InventoryReport.cs" />
+    <Compile Include="Reporting\IReport.cs" />
+    <Compile Include="Reporting\LibraryOfCongress.cs" />
+    <Compile Include="Reporting\MailDestination.cs" />
+    <Compile Include="Reporting\Message.cs" />
+    <Compile Include="Reporting\ReportMailer.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\BookCheckoutPolicy.cs" />
     <Compile Include="Models\Branch.cs" />
@@ -234,7 +241,6 @@
     <Compile Include="Models\Repositories\HoldingRepositoryExtensions.cs" />
     <Compile Include="ViewModels\HoldingViewModel.cs" />
     <Compile Include="Models\Repositories\BranchRepositoryExtensions.cs" />
-    <Compile Include="Models\BranchService.cs" />
     <Compile Include="Models\CheckoutException.cs" />
     <Compile Include="Models\CheckoutPolicies.cs" />
     <Compile Include="Models\CheckoutPolicy.cs" />
