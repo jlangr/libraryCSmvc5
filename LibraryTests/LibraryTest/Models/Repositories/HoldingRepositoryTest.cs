@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LibraryTests.LibraryTest.Models.Repositories
+namespace LibraryTests.Library.Models.Repositories
 {
     [TestFixture, Category("slow")]
     public class HoldingRepositoryTest

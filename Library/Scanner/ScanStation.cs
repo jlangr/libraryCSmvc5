@@ -10,7 +10,6 @@ namespace Library.Scanner
     {
         public const int NoPatron = -1;
         private readonly IClassificationService classificationService;
-        private readonly HoldingService holdingService = new HoldingService();
         private readonly int brId;
         private int cur = NoPatron;
         private DateTime cts;

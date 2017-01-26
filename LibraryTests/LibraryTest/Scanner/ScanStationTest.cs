@@ -8,7 +8,7 @@ using Library.Models;
 using Library.Scanner;
 using Library.Models.Repositories;
 
-namespace LibraryTest.Scanner
+namespace LibraryTest.Library.Scanner
 {
     [TestFixture]
     public class ScanStationTest

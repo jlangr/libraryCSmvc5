@@ -1,8 +1,8 @@
 ﻿using System;
-using Library.VideoStore;
 using NUnit.Framework;
+using Library.VideoStore;
 
-namespace LibraryTests.VideoStore
+namespace LibraryTests.Library.VideoStore
 {
     [TestFixture]
     public class CustomerTest

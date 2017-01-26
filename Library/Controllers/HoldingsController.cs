@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Library.Models;
 using Library.Models.Repositories;
+using Library.ControllerHelpers;
 
 namespace Library.Controllers
 {
     public class HoldingsController : Controller
     {
         public const string ModelKey = "Holdings";
-        IRepository<Holding> holdingRepo;
-        IRepository<Branch> branchRepo;
+        private IRepository<Holding> holdingRepo;
+        private IRepository<Branch> branchRepo;
 
         public HoldingsController()
         {
@@ -26,37 +27,20 @@ namespace Library.Controllers
         }
 
         // GET: Holdings
-        // TODO test around alternate branch name. Refactor?
         public ActionResult Index()
         {
-            var model = new List<HoldingViewModel>();
-            foreach (var holding in holdingRepo.GetAll())
-                model.Add(new HoldingViewModel(holding) { BranchName = BranchName(holding.BranchId) });
+            var model = holdingRepo.GetAll().Select(
+                holding => new HoldingViewModel(holding)
+                {
+                    BranchName = BranchesControllerUtil.BranchName(branchRepo, holding.BranchId)
+                });
             return View(model);
-        }
-
-        // TODO: Where might this go
-        string BranchName(int branchId)
-        {
-            if (branchId == Branch.CheckedOutId)
-                return "** checked out **";
-            return branchRepo.GetByID(branchId).Name;
         }
 
         // GET: Holdings/Details/5
         public ActionResult Details(int? id)
         {
             return Edit(id);
-        }
-
-        [HttpGet]
-        public JsonResult Find(string classification, int copyNumber)
-        {
-            var barcode = Holding.GenerateBarcode(classification, copyNumber);
-            var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode);
-            if (holding == null)
-                return Json(HttpNotFound());
-            return Json(holding, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Holdings/Edit/5
@@ -102,7 +86,7 @@ namespace Library.Controllers
                     }
                 }
 
-                var id = holdingRepo.Create(holding); 
+                var id = holdingRepo.Create(holding);
                 return RedirectToAction("Index", new { ID = id });
             }
             return View(holding);

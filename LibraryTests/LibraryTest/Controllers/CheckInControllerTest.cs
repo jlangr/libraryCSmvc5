@@ -7,7 +7,7 @@ using NUnit.Framework;
 using System;
 using System.Web.Mvc;
 
-namespace LibraryTests.LibraryTest.Controllers
+namespace LibraryTest.Library.Controllers
 {
     [TestFixture]
     public class CheckInControllerTest

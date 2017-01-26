@@ -1,18 +1,21 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 using NUnit.Framework;
 using Library.Controllers;
 using Library.Extensions.SystemWebMvcController;
 using Library.Models;
 using Library.Models.Repositories;
+using System;
 
-namespace LibraryTests.LibraryTest.Controllers
+namespace LibraryTest.Library.Controllers
 {
     [TestFixture]
     public class HoldingsControllerTest
     {
-        private HoldingsController controller;
-        private IRepository<Holding> holdingRepo;
-        private IRepository<Branch> branchRepo;
+        HoldingsController controller;
+        IRepository<Holding> holdingRepo;
+        IRepository<Branch> branchRepo;
 
         [SetUp]
         public void Initialize()
@@ -79,6 +82,16 @@ namespace LibraryTests.LibraryTest.Controllers
             var result = controller.Create(new Holding() { Classification = "AB123", CopyNumber = 1 }) as ViewResult;
 
             Assert.That(controller.SoleErrorMessage(HoldingsController.ModelKey), Is.EqualTo("Duplicate classification / copy number combination."));
+        }
+
+        [Test]
+        public void PopulatesViewModelWithBranchName()
+        {
+            var branchId = branchRepo.Create(new Branch { Name = "branch123" });
+            controller.Create(new Holding() { Classification = "AB123", CopyNumber = 1, BranchId = branchId });
+
+            var model = (controller.Index() as ViewResult).Model as IEnumerable<HoldingViewModel>;
+
         }
     }
 }

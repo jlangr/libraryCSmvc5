@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Library.Models;
 
-namespace LibraryTest.Models
+namespace LibraryTest.Library.Models
 {
     [TestFixture]
     public class MovieCheckoutPolicyTest

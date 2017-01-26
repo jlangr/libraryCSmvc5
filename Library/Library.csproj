@@ -208,6 +208,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="ControllerHelpers\BranchesControllerUtil.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BranchesController.cs" />
     <Compile Include="Controllers\CheckInController.cs" />
@@ -246,7 +247,6 @@
     <Compile Include="Models\CheckoutPolicy.cs" />
     <Compile Include="Models\Repositories\EntityRepository.cs" />
     <Compile Include="Models\Holding.cs" />
-    <Compile Include="Models\HoldingService.cs" />
     <Compile Include="Models\IClassificationService.cs" />
     <Compile Include="Models\Identifiable.cs" />
     <Compile Include="Models\IdentityModels.cs" />

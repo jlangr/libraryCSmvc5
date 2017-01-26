@@ -1,11 +1,10 @@
 using System;
 using NUnit.Framework;
 using Library.Models;
-using System.Text.RegularExpressions;
 
 // TODO add some junk. E.g. try / catch, assert against not null
 
-namespace LibraryTest.Models
+namespace LibraryTest.Library.Models
 {
     [TestFixture]
     public class HoldingTest

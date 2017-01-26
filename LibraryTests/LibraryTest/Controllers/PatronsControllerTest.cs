@@ -5,10 +5,8 @@ using NUnit.Framework;
 using Library.Controllers;
 using Library.Models;
 using Library.Models.Repositories;
-using Library.Extensions.SystemWebMvcController;
-using System;
 
-namespace LibraryTests.LibraryTest.Controllers
+namespace LibraryTest.Library.Controllers
 {
     [TestFixture]
     public class PatronsControllerTest

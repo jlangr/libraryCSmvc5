@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using Library.Models;
 using Library.Models.Repositories;
 using Library.Util;
-using System;
 
 namespace Library.Controllers
 {
@@ -39,9 +38,8 @@ namespace Library.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(CheckOutViewModel checkout)
         {
-            // TODO is this needed here?
-            //if (!ModelState.IsValid)
-            //    return View(checkout);
+            if (!ModelState.IsValid)
+                return View(checkout);
 
             checkout.BranchesViewList = new List<Branch>(BranchRepositoryExtensions.GetAll(branchRepo)); 
 
