@@ -7,7 +7,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Library.Models.Repositories
 {
-    // TODO add some tests for this stuff
     public class InMemoryRepository<T> : IRepository<T>
         where T : Identifiable
     {
@@ -56,7 +55,7 @@ namespace Library.Models.Repositories
         public void Delete(int id)
         {
             entities.Remove(id);
-            // TODO remove from modified entities?
+            // remove from modified entities?
         }
 
         public void Dispose()
@@ -91,6 +90,7 @@ namespace Library.Models.Repositories
         {
             modifiedEntities.Add(entity);
         }
+
         // TODO require HashSet on entity!
 
         public void Save(T entity)

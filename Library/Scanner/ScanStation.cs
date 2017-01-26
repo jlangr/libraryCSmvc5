@@ -51,7 +51,7 @@ namespace Library.Scanner
 
         // 1/19/2017: who wrote this?
         // 
-        // TODO. Fix this mess. We just have to SHIP IT for nwo!!!
+        // FIXME. Fix this mess. We just have to SHIP IT for nwo!!!
         public void AcceptBarcode(string bc)
         {
             var cl = Holding.ClassificationFromBarcode(bc);
