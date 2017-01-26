@@ -8,7 +8,7 @@ namespace Library.Scanner
 {
     public class ScanStation
     {
-        const int NoPatron = -1;
+        public const int NoPatron = -1;
         private readonly IClassificationService classificationService;
         private readonly HoldingService holdingService = new HoldingService();
         private readonly int brId;
@@ -42,6 +42,7 @@ namespace Library.Scanner
         }
 
         public int BranchId { get; set; }
+        public int CurrentPatronId { get { return cur; }  }
 
         public void AcceptLibraryCard(int patronId)
         {
