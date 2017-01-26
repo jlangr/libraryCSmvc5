@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Library.Models
 {
-    public class MasterClassificationService: IClassificationService
+    public class MasterClassificationService : IClassificationService
     {
         private static readonly IDictionary<string, Material> Materials = new Dictionary<string, Material>();
 
@@ -18,14 +18,26 @@ namespace Library.Models
 
         public void AddMovie(string classification, string title, string director, string year)
         {
-            var material = new Material(classification, title, director, year, CheckoutPolicies.MovieCheckoutPolicy);
-            Materials[classification] = material;
+            Materials[classification] = new Material
+            {
+                Classification = classification,
+                Title = title,
+                Author = director,
+                Year = year,
+                CheckoutPolicy = CheckoutPolicies.MovieCheckoutPolicy
+            };
         }
 
         public void AddBook(string classification, string title, string author, string year)
         {
-            var material = new Material(classification, title, author, year);
-            Materials[classification] = material;
+            Materials[classification] = new Material
+            {
+                Classification = classification,
+                Title = title,
+                Author = author,
+                Year = year,
+                CheckoutPolicy = CheckoutPolicies.BookCheckoutPolicy
+            };
         }
 
         public Material Retrieve(string classification)

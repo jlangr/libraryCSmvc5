@@ -21,14 +21,12 @@ namespace LibraryTests.Library.Models.Repositories
             repo.Clear();
         }
 
-        // TODO belong elsewhere?
         [Test]
         public void FindByBarcodeReturnsNullWhenNotFound()
         {
             Assert.That(HoldingRepositoryExtensions.FindByBarcode(repo, "AA:1"), Is.Null);
         }
 
-        // TODO belong elsewhere?
         [Test]
         public void FindByBarcodeReturnsHoldingMatchingClassificationAndCopy()
         {

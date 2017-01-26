@@ -68,7 +68,7 @@ namespace Library.Controllers
                 return View(checkout);
             }
 
-            // TODO policy?
+            // TODO determine policy from Isbn lookup
             holding.CheckOut(TimeService.Now, checkout.PatronId, new BookCheckoutPolicy());
             holdingRepo.Save(holding);
 
