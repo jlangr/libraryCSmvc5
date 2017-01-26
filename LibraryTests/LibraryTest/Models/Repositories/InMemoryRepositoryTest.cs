@@ -4,7 +4,7 @@ using NUnit.Framework;
 using Library.Models;
 using Library.Models.Repositories;
 
-namespace LibraryTests.LibraryTest.Models
+namespace LibraryTests.Models.Repositories
 {
     [TestFixture]
     public class InMemoryRepositoryTest

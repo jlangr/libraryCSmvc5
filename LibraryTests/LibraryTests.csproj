@@ -101,12 +101,12 @@
     <Compile Include="LibraryTest\Models\CheckoutPolicyTest.cs" />
     <Compile Include="LibraryTest\Models\HoldingServiceTest.cs" />
     <Compile Include="LibraryTest\Models\HoldingTest.cs" />
-    <Compile Include="LibraryTest\Models\InMemoryRepositoryTest.cs" />
+    <Compile Include="LibraryTest\Models\Repositories\InMemoryRepositoryTest.cs" />
     <Compile Include="LibraryTest\Models\MasterClassificationServiceTest.cs" />
     <Compile Include="LibraryTest\Models\MovieCheckoutPolicyTest.cs" />
     <Compile Include="LibraryTest\Models\PatronTest.cs" />
     <Compile Include="LibraryTest\Models\Repositories\HoldingRepositoryTest.cs" />
-    <Compile Include="LibraryTest\Models\ScanStation\ScanStationTest.cs" />
+    <Compile Include="LibraryTest\Scanner\ScanStationTest.cs" />
     <Compile Include="LibraryTest\Util\NameNormalizerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

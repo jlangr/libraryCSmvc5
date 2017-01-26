@@ -1,9 +1,10 @@
 using System;
 using System.Linq;
 using Library.Util;
+using Library.Models;
 using Library.Models.Repositories;
 
-namespace Library.Models.ScanStation
+namespace Library.Scanner
 {
     public class ScanStation
     {
@@ -73,9 +74,10 @@ namespace Library.Models.ScanStation
                     h.CheckIn(cis, brId);
                     holdingRepo.Save(h);
                 }
-                else // ck book already cked-out
+                else 
                 {
-                    if (h.HeldByPatronId != cur)
+                    // TODO not tested!
+                    if (h.HeldByPatronId != cur) // attempt to check out book already cked-out
                     {
                         var bc1 = h.Barcode;
                         var n = TimeService.Now;
@@ -84,13 +86,14 @@ namespace Library.Models.ScanStation
                         var patron = patronRepo.GetByID(h.HeldByPatronId);
                         patron.Fine(f);
                         patronRepo.Save(patron);
-//holdingService.CheckIn(n, bc1, brId);
+                        h.CheckIn(n, brId);
+                        holdingRepo.Save(h);
                         // co
-//holdingService.CheckOut(cts, bc1, cur, CheckoutPolicies.BookCheckoutPolicy);
+                        h.CheckOut(n, cur, CheckoutPolicies.BookCheckoutPolicy);
+                        holdingRepo.Save(h);
                         // call check out controller(cur, bc1);
                         t.AddDays(1);
                         n = t;
- //patronService.CheckIn(patron.Id, bc);
                     }
                     else // not checking out book already cked out by other patron
                     {
