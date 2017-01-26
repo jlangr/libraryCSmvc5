@@ -77,13 +77,12 @@ namespace Library.Scanner
                 }
                 else 
                 {
-                    // TODO not tested!
-                    if (h.HeldByPatronId != cur) // attempt to check out book already cked-out
+                    if (h.HeldByPatronId != cur) // check out book already cked-out
                     {
                         var bc1 = h.Barcode;
                         var n = TimeService.Now;
                         var t = TimeService.Now.AddDays(21);
-                        var f = classificationService.Retrieve(h.Classification).CheckoutPolicy.FineAmount(h.CheckOutTimestamp.Value, n.AddDays(21));
+                        var f = classificationService.Retrieve(h.Classification).CheckoutPolicy.FineAmount(h.CheckOutTimestamp.Value, n);
                         var patron = patronRepo.GetByID(h.HeldByPatronId);
                         patron.Fine(f);
                         patronRepo.Save(patron);

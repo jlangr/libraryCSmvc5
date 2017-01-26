@@ -8,8 +8,6 @@ using Library.Models;
 using Library.Scanner;
 using Library.Models.Repositories;
 
-// TODO remove dependency on web mvc stuff from test and prod packages
-
 namespace LibraryTest.Scanner
 {
     [TestFixture]
@@ -58,8 +56,30 @@ namespace LibraryTest.Scanner
 
         void CheckOut(string barcode)
         {
-            TimeService.NextTime = now;
-            scanner.AcceptLibraryCard(somePatronId);
+            CheckOut(barcode, somePatronId);
+        }
+
+        void CheckOut(string barcode, int patronId)
+        {
+            CheckOut(barcode, patronId, now);
+        }
+
+        void CheckOut(string barcode, int patronId, DateTime dateTime)
+        {
+            TimeService.NextTime = dateTime;
+            scanner.AcceptLibraryCard(patronId);
+            TimeService.NextTime = dateTime;
+            scanner.AcceptBarcode(barcode);
+        }
+
+        void CheckIn(string barcode)
+        {
+            CheckIn(barcode, now);
+        }
+
+        void CheckIn(string barcode, DateTime dateTime)
+        {
+            TimeService.NextTime = dateTime;
             scanner.AcceptBarcode(barcode);
         }
 
@@ -197,17 +217,11 @@ namespace LibraryTest.Scanner
             {
                 scanner.CompleteCheckout();
                 const int daysLate = 2;
-                SetTimeServiceToLateForMaterialTypeByDays(SomeBarcode, daysLate);
 
-                scanner.AcceptBarcode(SomeBarcode);
+                CheckIn(SomeBarcode, DaysPastDueDate(SomeBarcode, now, daysLate));
 
-                var patron = patronRepo.GetByID(somePatronId);
-                Assert.That(patron.Balance, Is.EqualTo(RetrievePolicy(SomeBarcode).FineAmount(daysLate)));
-            }
-
-            private void SetTimeServiceToLateForMaterialTypeByDays(string barcode, int days)
-            {
-                TimeService.NextTime = now.AddDays(RetrievePolicy(barcode).MaximumCheckoutDays() + days);
+                Assert.That(patronRepo.GetByID(somePatronId).Balance, 
+                    Is.EqualTo(RetrievePolicy(SomeBarcode).FineAmount(daysLate)));
             }
 
             private CheckoutPolicy RetrievePolicy(string barcode)
@@ -215,6 +229,36 @@ namespace LibraryTest.Scanner
                 var classification = Holding.ClassificationFromBarcode(barcode);
                 var material = classificationService.Object.Retrieve(classification);
                 return material.CheckoutPolicy;
+            }
+
+            [Test]
+            public void CheckoutByOtherPatronSucceeds()
+            {
+                scanner.CompleteCheckout();
+                var anotherPatronId = patronRepo.Create(new Patron());
+                scanner.AcceptLibraryCard(anotherPatronId);
+
+                CheckOut(SomeBarcode, anotherPatronId);
+
+                Assert.That(GetByBarcode(SomeBarcode).HeldByPatronId, Is.EqualTo(anotherPatronId));
+            }
+
+            [Test]
+            public void CheckoutByOtherPatronAssessesAnyFineOnFirst()
+            {
+                scanner.CompleteCheckout();
+                var anotherPatronId = patronRepo.Create(new Patron());
+
+                const int daysLate = 2;
+                CheckOut(SomeBarcode, anotherPatronId, DaysPastDueDate(SomeBarcode, now, daysLate));
+
+                Assert.That(patronRepo.GetByID(somePatronId).Balance,
+                    Is.EqualTo(RetrievePolicy(SomeBarcode).FineAmount(daysLate)));
+            }
+
+            private DateTime DaysPastDueDate(string barcode, DateTime fromDate, int daysLate)
+            {
+                return now.AddDays(RetrievePolicy(barcode).MaximumCheckoutDays() + daysLate);
             }
         }
 
@@ -227,12 +271,6 @@ namespace LibraryTest.Scanner
                 CheckOut(SomeBarcode);
                 scanner.CompleteCheckout();
                 CheckIn(SomeBarcode);
-            }
-
-            void CheckIn(string barcode)
-            {
-                TimeService.NextTime = now;
-                scanner.AcceptBarcode(barcode);
             }
 
             [Test]
