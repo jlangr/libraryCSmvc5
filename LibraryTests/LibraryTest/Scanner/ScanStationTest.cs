@@ -116,7 +116,7 @@ namespace LibraryTest.Library.Scanner
             }
 
             [Test]
-            public void ThrowsWhenAttemptingToCheckInCheckedOutBookWithoutPatronScan()
+            public void ThrowsWhenCheckingInCheckedOutBookWithoutPatronScan()
             {
                 ScanNewMaterial(SomeBarcode);
 
