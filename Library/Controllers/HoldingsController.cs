@@ -56,7 +56,7 @@ namespace Library.Controllers
 
         private ActionResult ViewWithBranches(Holding holding)
         {
-            return View(new HoldingViewModel(holding) { BranchesViewList = new List<Branch>(BranchRepositoryExtensions.GetAll(branchRepo)) });
+            return View(new HoldingViewModel(holding) { BranchesViewList = new List<Branch>(branchRepo.GetAllIncludingCheckedOutBranch()) });
         }
 
         // GET: Holdings/Create

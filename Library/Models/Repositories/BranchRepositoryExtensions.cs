@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace Library.Models.Repositories
 {
-    public class BranchRepositoryExtensions
+    public static class BranchRepositoryExtensions
     {
-        static public IEnumerable<Branch> GetAll(IRepository<Branch> repo)
+        public static IEnumerable<Branch> GetAllIncludingCheckedOutBranch(this IRepository<Branch> repo)
         {
             return new List<Branch> { Branch.CheckedOutBranch }.Concat(repo.GetAll());
         }

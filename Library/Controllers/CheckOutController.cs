@@ -30,7 +30,7 @@ namespace Library.Controllers
         // GET: CheckOut
         public ActionResult Index()
         {
-            var model = new CheckOutViewModel { BranchesViewList = new List<Branch>(BranchRepositoryExtensions.GetAll(branchRepo)) };
+            var model = new CheckOutViewModel { BranchesViewList = new List<Branch>(branchRepo.GetAllIncludingCheckedOutBranch()) };
             return View(model);
         }
 
@@ -41,7 +41,7 @@ namespace Library.Controllers
             if (!ModelState.IsValid)
                 return View(checkout);
 
-            checkout.BranchesViewList = new List<Branch>(BranchRepositoryExtensions.GetAll(branchRepo)); 
+            checkout.BranchesViewList = new List<Branch>(branchRepo.GetAllIncludingCheckedOutBranch()); 
 
             var patron = patronRepo.GetByID(checkout.PatronId);
             if (patron == null)

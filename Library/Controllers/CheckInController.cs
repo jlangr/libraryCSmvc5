@@ -31,7 +31,7 @@ namespace Library.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(CheckInViewModel checkin)
         {
-            checkin.BranchesViewList = new List<Branch>(BranchRepositoryExtensions.GetAll(branchRepo));
+            checkin.BranchesViewList = new List<Branch>(branchRepo.GetAllIncludingCheckedOutBranch());
 
             if (!Holding.IsBarcodeValid(checkin.Barcode))
             {

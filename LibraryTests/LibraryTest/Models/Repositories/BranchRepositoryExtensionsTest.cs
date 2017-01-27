@@ -6,7 +6,6 @@ using System.Collections.Generic;
 
 namespace LibraryTests.LibraryTest.Models.Repositories
 {
-    // TODO: name? It's not really an extension. Can it be made into one?
     [TestFixture]
     public class BranchRepositoryExtensionsTest
     {
@@ -17,7 +16,7 @@ namespace LibraryTests.LibraryTest.Models.Repositories
             branchRepo.Create(new Branch { Name = "A" });
             branchRepo.Create(new Branch { Name = "B" });
 
-            var branches = BranchRepositoryExtensions.GetAll(branchRepo);
+            var branches = branchRepo.GetAllIncludingCheckedOutBranch();
 
             Assert.That(branches.First().Name, Is.EqualTo(Branch.CheckedOutBranch.Name));
             Assert.That(branches.Skip(1).Select(b => b.Name), Is.EquivalentTo(new List<string> { "A", "B" }));
