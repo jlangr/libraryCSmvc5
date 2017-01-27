@@ -105,5 +105,11 @@ namespace Library.Models
             var colonIndex = barcode.IndexOf(':');
             return int.Parse(barcode.Substring(colonIndex + 1));
         }
+
+        public int DaysLate()
+        {
+            var daysLate = LastCheckedIn.Value.Subtract(DueDate.Value).Days;
+            return Math.Max(0, daysLate);
+        }
     }
 }
