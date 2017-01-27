@@ -15,6 +15,11 @@ namespace Library.Models
         {
         }
 
+        public Holding(string barcode)
+            : this(ClassificationFromBarcode(barcode), CopyNumberFromBarcode(barcode), Branch.CheckedOutId)
+        {
+        }
+
         public Holding(string classification, int copyNumber, int branchId)
         {
             CheckOutTimestamp = null;

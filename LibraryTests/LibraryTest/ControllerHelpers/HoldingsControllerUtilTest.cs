@@ -17,9 +17,9 @@ namespace LibraryTests.LibraryTest.ControllerHelpers
         public void IncrementsCopyNumberUsingCount()
         {
             var holdingRepo = new InMemoryRepository<Holding>();
-            holdingRepo.Create(new Holding { Classification = "AB123", CopyNumber = 1 });
-            holdingRepo.Create(new Holding { Classification = "AB123", CopyNumber = 2 });
-            holdingRepo.Create(new Holding { Classification = "XX123", CopyNumber = 1 });
+            holdingRepo.Create(new Holding("AB123:1"));
+            holdingRepo.Create(new Holding("AB123:2"));
+            holdingRepo.Create(new Holding("XX123:1"));
 
             var copyNumber = HoldingsControllerUtil.NextAvailableCopyNumber(holdingRepo, "AB123");
 
