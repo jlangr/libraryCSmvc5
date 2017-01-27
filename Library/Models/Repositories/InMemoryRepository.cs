@@ -91,8 +91,6 @@ namespace Library.Models.Repositories
             modifiedEntities.Add(entity);
         }
 
-        // TODO require HashSet on entity!
-
         public void Save(T entity)
         {
             entities[entity.Id] = DeepClone(entity);

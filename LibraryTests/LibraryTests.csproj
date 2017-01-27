@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LibraryTest\ControllerHelpers\BranchesControllerUtilTest.cs" />
+    <Compile Include="LibraryTest\ControllerHelpers\HoldingsControllerUtilTest.cs" />
     <Compile Include="LibraryTest\Controllers\CheckInControllerTest.cs" />
     <Compile Include="LibraryTest\Controllers\CheckOutControllerTest.cs" />
     <Compile Include="LibraryTest\Controllers\HoldingsControllerTest.cs" />

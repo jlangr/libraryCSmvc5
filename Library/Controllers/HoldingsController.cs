@@ -62,7 +62,7 @@ namespace Library.Controllers
         // GET: Holdings/Create
         public ActionResult Create()
         {
-            return View(new HoldingViewModel { BranchesViewList = new List<Branch>(branchRepo.GetAll()) });
+            return ViewWithBranches(new Holding());
         }
 
         // POST: Holdings/Create
@@ -73,10 +73,7 @@ namespace Library.Controllers
             if (ModelState.IsValid)
             {
                 if (holding.CopyNumber == 0)
-                {
-                    var holdingsWithClassification = holdingRepo.FindBy(h => h.Classification == holding.Classification);
-                    holding.CopyNumber = holdingsWithClassification.Count() + 1;
-                }
+                    holding.CopyNumber = HoldingsControllerUtil.NextAvailableCopyNumber(holdingRepo, holding.Classification);
                 else
                 {
                     if (HoldingRepositoryExtensions.FindByBarcode(holdingRepo, holding.Barcode) != null)

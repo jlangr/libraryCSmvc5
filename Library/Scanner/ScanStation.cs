@@ -3,6 +3,7 @@ using System.Linq;
 using Library.Util;
 using Library.Models;
 using Library.Models.Repositories;
+using Library.ControllerHelpers;
 
 namespace Library.Scanner
 {
@@ -32,10 +33,10 @@ namespace Library.Scanner
         public Holding AddNewMaterial(string isbn)
         {
             var classification = classificationService.Classification(isbn);
-            // TODO duplicate logic in controller!
-            var holdingsWithClassification = holdingRepo.FindBy(h => h.Classification == classification);
-            var copyNumber = holdingsWithClassification.Count() + 1;
-            var holding = new Holding { Classification = classification, CopyNumber = copyNumber, BranchId = BranchId };
+            var holding = new Holding {
+                Classification = classification,
+                CopyNumber = HoldingsControllerUtil.NextAvailableCopyNumber(holdingRepo, classification),
+                BranchId = BranchId };
             holdingRepo.Create(holding);
             return holding;
         }
