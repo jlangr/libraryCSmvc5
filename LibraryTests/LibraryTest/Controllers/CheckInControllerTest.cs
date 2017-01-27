@@ -133,6 +133,6 @@ namespace LibraryTest.Library.Controllers
             }
         }
 
-        // TODO FINES on late checkin
+        // TODO exercise: fines on late checkin
     }
 }
