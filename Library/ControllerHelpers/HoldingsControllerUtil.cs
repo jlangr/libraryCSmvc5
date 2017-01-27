@@ -5,26 +5,21 @@ namespace Library.ControllerHelpers
 {
     public class HoldingsControllerUtil
     {
-        public static Holding FindByClassificationAndCopy(IRepository<Holding> repo, string classification, int copyNumber)
+        public static Holding FindByClassificationAndCopy(IRepository<Holding> holdingRepo, string classification, int copyNumber)
         {
-            var results = repo.FindBy(
-                (holding => { return holding.Classification == classification && holding.CopyNumber == copyNumber; }));
-            return results.FirstOrDefault();
+            return holdingRepo
+                .FindBy((h => h.Classification == classification && h.CopyNumber == copyNumber ))
+                .FirstOrDefault();
         }
 
         public static Holding FindByBarcode(IRepository<Holding> repo, string barcode)
         {
-            var classification = Holding.ClassificationFromBarcode(barcode);
-            var copyNumber = Holding.CopyNumberFromBarcode(barcode);
-            var results = repo.FindBy(
-                (holding => { return holding.Classification == classification && holding.CopyNumber == copyNumber; }));
-            return results.FirstOrDefault();
+            return FindByClassificationAndCopy(repo, Holding.ClassificationFromBarcode(barcode), Holding.CopyNumberFromBarcode(barcode));
         }
 
         public static int NextAvailableCopyNumber(IRepository<Holding> holdingRepo, string classification)
         {
-            var holdingsWithClassification = holdingRepo.FindBy(h => h.Classification == classification);
-            return holdingsWithClassification.Count() + 1;
+            return holdingRepo.FindBy(h => h.Classification == classification).Count() + 1;
         }
     }
 }
