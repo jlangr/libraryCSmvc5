@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.ControllerHelpers;
+using Library.Models;
 using Library.Models.Repositories;
 using NUnit.Framework;
 using System;
@@ -24,7 +25,7 @@ namespace LibraryTests.Library.Models.Repositories
         [Test]
         public void FindByBarcodeReturnsNullWhenNotFound()
         {
-            Assert.That(HoldingRepositoryExtensions.FindByBarcode(repo, "AA:1"), Is.Null);
+            Assert.That(HoldingsControllerUtil.FindByBarcode(repo, "AA:1"), Is.Null);
         }
 
         [Test]
@@ -34,7 +35,7 @@ namespace LibraryTests.Library.Models.Repositories
 
             repo.Create(holding);
 
-            Assert.That(HoldingRepositoryExtensions.FindByBarcode(repo, "AA123:2"), Is.EqualTo(holding));
+            Assert.That(HoldingsControllerUtil.FindByBarcode(repo, "AA123:2"), Is.EqualTo(holding));
         }
     }
 }

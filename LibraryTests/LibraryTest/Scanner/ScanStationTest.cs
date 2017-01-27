@@ -7,6 +7,7 @@ using Library.Util;
 using Library.Models;
 using Library.Scanner;
 using Library.Models.Repositories;
+using Library.ControllerHelpers;
 
 namespace LibraryTest.Library.Scanner
 {
@@ -51,7 +52,7 @@ namespace LibraryTest.Library.Scanner
 
         Holding GetByBarcode(string barcode)
         {
-            return HoldingRepositoryExtensions.FindByBarcode(holdingRepo, barcode);
+            return HoldingsControllerUtil.FindByBarcode(holdingRepo, barcode);
         }
 
         void CheckOut(string barcode)

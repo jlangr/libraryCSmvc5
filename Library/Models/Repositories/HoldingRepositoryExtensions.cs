@@ -5,7 +5,8 @@ namespace Library.Models.Repositories
     // TODO Can we use a delegate here to handle both repo types?
     public class HoldingRepositoryExtensions
     {
-        public static Holding FindByBarcode(IRepository<Holding> repo, string barcode)
+        // TODO test!
+        public static Holding XFindByBarcode(IRepository<Holding> repo, string barcode)
         {
             var classification = Holding.ClassificationFromBarcode(barcode);
             var copyNumber = Holding.CopyNumberFromBarcode(barcode);

@@ -3,6 +3,7 @@ using Library.Models;
 using Library.Models.Repositories;
 using System.Web.Mvc;
 using Library.Util;
+using Library.ControllerHelpers;
 
 namespace Library.Controllers
 {
@@ -39,7 +40,7 @@ namespace Library.Controllers
                 return View(checkin);
             }
 
-            var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, checkin.Barcode);
+            var holding = HoldingsControllerUtil.FindByBarcode(holdingRepo, checkin.Barcode);
             if (holding == null)
             {
                 ModelState.AddModelError(ModelKey, "Invalid holding barcode.");

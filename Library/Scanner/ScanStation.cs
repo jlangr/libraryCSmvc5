@@ -57,7 +57,7 @@ namespace Library.Scanner
         {
             var cl = Holding.ClassificationFromBarcode(bc);
             var cn = Holding.CopyNumberFromBarcode(bc);
-            var h = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, bc);
+            var h = HoldingsControllerUtil.FindByBarcode(holdingRepo, bc);
 
             if (h.IsCheckedOut)
             {

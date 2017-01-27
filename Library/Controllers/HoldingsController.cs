@@ -76,7 +76,7 @@ namespace Library.Controllers
                     holding.CopyNumber = HoldingsControllerUtil.NextAvailableCopyNumber(holdingRepo, holding.Classification);
                 else
                 {
-                    if (HoldingRepositoryExtensions.FindByBarcode(holdingRepo, holding.Barcode) != null)
+                    if (HoldingsControllerUtil.FindByBarcode(holdingRepo, holding.Barcode) != null)
                     {
                         ModelState.AddModelError(ModelKey, "Duplicate classification / copy number combination.");
                         return View(holding);

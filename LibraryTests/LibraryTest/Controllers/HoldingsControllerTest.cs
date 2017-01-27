@@ -7,6 +7,7 @@ using Library.Extensions.SystemWebMvcController;
 using Library.Models;
 using Library.Models.Repositories;
 using System;
+using Library.ControllerHelpers;
 
 namespace LibraryTest.Library.Controllers
 {
@@ -30,7 +31,7 @@ namespace LibraryTest.Library.Controllers
         {
             controller.Create(new Holding() { Classification = "AB123", CopyNumber = 1 });
 
-            var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, "AB123:1");
+            var holding = HoldingsControllerUtil.FindByBarcode(holdingRepo, "AB123:1");
             Assert.That(holding.Barcode, Is.EqualTo("AB123:1"));
         }
 
@@ -48,7 +49,7 @@ namespace LibraryTest.Library.Controllers
         {
             controller.Create(new Holding() { Classification = "AB123", CopyNumber = 0 });
 
-            var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, "AB123:1");
+            var holding = HoldingsControllerUtil.FindByBarcode(holdingRepo, "AB123:1");
             Assert.That(holding.Barcode, Is.EqualTo("AB123:1"));
         }
 
@@ -59,7 +60,7 @@ namespace LibraryTest.Library.Controllers
 
             controller.Create(new Holding() { Classification = "AB123", CopyNumber = 0, HeldByPatronId = 2 });
 
-            var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, "AB123:2");
+            var holding = HoldingsControllerUtil.FindByBarcode(holdingRepo, "AB123:2");
             Assert.That(holding.HeldByPatronId, Is.EqualTo(2));
         }
 
@@ -70,7 +71,7 @@ namespace LibraryTest.Library.Controllers
 
             controller.Create(new Holding() { Classification = "XX999", CopyNumber = 0, HeldByPatronId = 2 });
 
-            var holding = HoldingRepositoryExtensions.FindByBarcode(holdingRepo, "XX999:1");
+            var holding = HoldingsControllerUtil.FindByBarcode(holdingRepo, "XX999:1");
             Assert.That(holding.HeldByPatronId, Is.EqualTo(2));
         }
 
