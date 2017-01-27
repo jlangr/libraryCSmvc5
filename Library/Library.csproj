@@ -240,7 +240,6 @@
     <Compile Include="ViewModels\CheckInViewModel.cs" />
     <Compile Include="ViewModels\CheckOutViewModel.cs" />
     <Compile Include="ViewModels\PatronViewModel.cs" />
-    <Compile Include="Models\Repositories\HoldingRepositoryExtensions.cs" />
     <Compile Include="ViewModels\HoldingViewModel.cs" />
     <Compile Include="Models\Repositories\BranchRepositoryExtensions.cs" />
     <Compile Include="Models\CheckoutException.cs" />
