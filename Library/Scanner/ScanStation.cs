@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Library.Util;
 using Library.Models;
 using Library.Models.Repositories;
@@ -17,8 +16,12 @@ namespace Library.Scanner
         private IRepository<Patron> patronRepo;
         private IRepository<Holding> holdingRepo;
 
-        public ScanStation(int branchId) {
-            BranchId = branchId;
+        public ScanStation(int branchId)
+            : this(branchId,
+                  new MasterClassificationService(),
+                  new EntityRepository<Holding>(db => db.Holdings),
+                  new EntityRepository<Patron>(db => db.Patrons))
+        {
         }
 
         public ScanStation(int branchId, IClassificationService classificationService, IRepository<Holding> holdingRepo, IRepository<Patron> patronRepo)
@@ -33,16 +36,18 @@ namespace Library.Scanner
         public Holding AddNewMaterial(string isbn)
         {
             var classification = classificationService.Classification(isbn);
-            var holding = new Holding {
+            var holding = new Holding
+            {
                 Classification = classification,
                 CopyNumber = HoldingsControllerUtil.NextAvailableCopyNumber(holdingRepo, classification),
-                BranchId = BranchId };
+                BranchId = BranchId
+            };
             holdingRepo.Create(holding);
             return holding;
         }
 
         public int BranchId { get; set; }
-        public int CurrentPatronId { get { return cur; }  }
+        public int CurrentPatronId { get { return cur; } }
 
         public void AcceptLibraryCard(int patronId)
         {
@@ -75,7 +80,7 @@ namespace Library.Scanner
                     h.CheckIn(cis, brId);
                     holdingRepo.Save(h);
                 }
-                else 
+                else
                 {
                     if (h.HeldByPatronId != cur) // check out book already cked-out
                     {

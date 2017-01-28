@@ -33,6 +33,7 @@ namespace LibraryTest.Library.Scanner
             AlwaysReturnBookMaterial(classificationService);
             somePatronId = patronRepo.Create(new Patron { Name = "x" });
 
+            // calling .Object on a mock for the first time is an expensive operation (~200+ ms)
             scanner = new ScanStation(1, classificationService.Object, holdingRepo, patronRepo);
         }
 
@@ -86,14 +87,6 @@ namespace LibraryTest.Library.Scanner
 
         public class TestsNotRequiringCheckout : ScanStationTest
         {
-            [Test]
-            public void BranchIdIsRequiredWhenConstructed()
-            {
-                var otherScanner = new ScanStation(1);
-
-                Assert.That(otherScanner.BranchId, Is.EqualTo(1));
-            }
-
             [Test]
             public void StoresHoldingAtBranchWhenNewMaterialAdded()
             {

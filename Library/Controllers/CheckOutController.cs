@@ -69,7 +69,8 @@ namespace Library.Controllers
                 return View(checkout);
             }
 
-            // TODO determine policy from Isbn lookup
+            // TODO determine policy material, which in turn comes from from Isbn lookup on creation 
+            // Currently Holding creation in controller does not accept ISBN
             holding.CheckOut(TimeService.Now, checkout.PatronId, new BookCheckoutPolicy());
             holdingRepo.Save(holding);
 
